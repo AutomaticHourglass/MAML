@@ -1,3 +1,11 @@
+import os
+import numpy as np # linear algebra
+import pandas as pd # data processing, CSV file I/O (e.g. pd.read_csv)
+from tqdm import tqdm
+import rasterio
+import matplotlib.pyplot as plt
+import tensorflow as tf
+
 def extract_subimages(img0,img1,img_size_x = 512,img_size_y = 512,gap = 256,zero_ratio = 0.5):
     cx,cy = np.meshgrid(range(0,img0.shape[0]-img_size_x,gap),range(0,img0.shape[1]-img_size_y,gap))
 
