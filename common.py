@@ -114,3 +114,13 @@ def extract_random_subimages_generator_multi(img0,img1,n=10,img_size_x = 512,img
             r2 = np.concatenate([r2,r2[:,::-1,:],  r2[:,:,::-1],  r2[:,::-1,::-1]  ],axis=0)
 
         yield r1,r2
+
+def reconstruct_image(label_img,coords):
+    minx, maxx = min(coords[0]), max(coords[0])
+    miny, maxy = min(coords[0]), max(coords[1])
+
+    canvas = np.zeros((maxx-minx+img_size,maxy-miny+img_size))
+
+    for patch_label,coordx, coordy in tqdm(zip(label_img,coords[0],coords[1])):
+        canvas[coordx:coordx+img_size,coordy:coordy+img_size] = patch_label
+    return canvas
