@@ -85,7 +85,7 @@ def extract_subimages_generator(img0,img1,batch_size = 16,img_size_x = 512,img_s
         yield r1,r2
 
 
-def extract_random_subimages_generator_multi(img0,img1,n=10,img_size_x = 512,img_size_y = 512, Augmentation=True,zero_ratio = 0.5):
+def extract_random_subimages_generator_multi(img0,img1,n=10,img_size_x = 512,img_size_y = 512, Augmentation=True,zero_ratio = 0.5, num_classes = 5):
     while True:
         n_cur = n
         if Augmentation:
