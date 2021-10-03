@@ -1,10 +1,10 @@
 import tensorflow as tf
-from tf.keras.models import *
-from tf.keras.layers import *
+from tensorflow.keras.models import *
+from tensorflow.keras.layers import *
 from types import MethodType
 import random
 import six
-from tf.keras.callbacks import Callback
+from tensorflow.keras.callbacks import Callback
 
 IMAGE_ORDERING_CHANNELS_LAST = "channels_last"
 IMAGE_ORDERING_CHANNELS_FIRST = "channels_first"
