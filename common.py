@@ -123,7 +123,7 @@ def extract_random_subimages_generator_multi(img0,img1,n=10,img_size_x = 512,img
 
         yield r1,r2
 
-def reconstruct_image(label_img,coords):
+def reconstruct_image(label_img,coords,img_size):
     minx, maxx = min(coords[0]), max(coords[0])
     miny, maxy = min(coords[0]), max(coords[1])
 
