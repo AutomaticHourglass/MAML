@@ -1,4 +1,4 @@
-import TensorFlow as TF
+import tensorflow as TF
 if TF:
     from tensorflow.keras.models import Model
     from tensorflow.keras.layers import (
