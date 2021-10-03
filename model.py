@@ -77,8 +77,8 @@ class SSegModel:
         self.acc = np.mean(ts_label == self.pred_cl)
         print(f'{self.model_name} accuracy: {self.acc}')
 
-        self.pred_img = reconstruct_image(self.pred_cl,ts_coords,self.model_params['input_shape'][0])
-        plt.imshow(self.pred_img[::5,::5],)
+        pred_img = reconstruct_image(self.pred_cl,ts_coords,self.model_params['input_shape'][0])
+        plt.imshow(pred_img[::5,::5],)
         plt.imsave(f'results/label_ts_{self.model_name}.png',self.pred_img,vmin=0,vmax=self.model_params['num_classes'])
         plt.show()
 
