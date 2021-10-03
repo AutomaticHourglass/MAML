@@ -1,3 +1,0 @@
-[submodule "unet"]
-	path = keras_unet
-	url = https://github.com/karolzak/keras-unet
