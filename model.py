@@ -10,6 +10,7 @@ import numpy as np
 from .common import *
 import gzip
 import dill
+import os
 
 class SSegModel:
     def __init__(self,model_name,model_params,train_params):
@@ -25,6 +26,8 @@ class SSegModel:
             self.model = model_danet.danet_resnet101(**model_params)
         else:
             self.model = None
+
+    os.makedir('results')
 
     def create_callbacks(self):
         self.adam = tensorflow.keras.optimizers.Adam(learning_rate=self.train_params['learning_rate'])
@@ -65,7 +68,7 @@ class SSegModel:
         plt.ylabel('Loss')
         plt.title(f'{self.model_name} - Loss')
         plt.legend(['Train','Validation'])
-        plt.savefig(f'loss_{self.model_name}.png',dpi=300,bbox_inches='tight')
+        plt.savefig(f'results/loss_{self.model_name}.png',dpi=300,bbox_inches='tight')
         plt.show()
 
     def evaluate(self,ts_data,ts_label,ts_coords):
@@ -77,10 +80,10 @@ class SSegModel:
 
         self.pred_img = reconstruct_image(self.pred_cl,ts_coords,self.model_params['input_shape'][0])
         plt.imshow(self.pred_img[::5,::5],)
-        plt.imsave(f'label_ts_{self.model_name}.png',self.pred_img,vmin=0,vmax=self.model_params['num_classes'])
+        plt.imsave(f'results/label_ts_{self.model_name}.png',self.pred_img,vmin=0,vmax=self.model_params['num_classes'])
         plt.show()
 
-        dill.dump(self,gzip.open(f'model_{self.model_name}.pkl.gz','wb'))
+        dill.dump(self,gzip.open(f'results/model_{self.model_name}.pkl.gz','wb'))
         
     def save(self):
         pass
