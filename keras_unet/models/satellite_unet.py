@@ -1,7 +1,7 @@
 # https://cdn-sv1.deepsense.ai/wp-content/uploads/2017/04/architecture_details.png
 # https://deepsense.ai/deep-learning-for-satellite-imagery-via-image-segmentation/
 
-from keras_unet import TF
+import tensorflow as TF
 if TF:
     from tensorflow.keras.models import Model
     from tensorflow.keras.layers import ( 
