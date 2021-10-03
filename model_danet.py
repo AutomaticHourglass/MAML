@@ -1,13 +1,13 @@
-from keras.models import Model
-from keras.layers import Input, Activation, Conv2D, Dropout
-from keras.layers import MaxPooling2D, BatchNormalization
-from keras.layers import UpSampling2D
-from keras.layers import concatenate
-from keras.layers import add
-from keras.layers import Activation, Conv2D
-import keras.backend as K
+from tensorflow.keras.models import Model
+from tensorflow.keras.layers import Input, Activation, Conv2D, Dropout
+from tensorflow.keras.layers import MaxPooling2D, BatchNormalization
+from tensorflow.keras.layers import UpSampling2D
+from tensorflow.keras.layers import concatenate
+from tensorflow.keras.layers import add
+from tensorflow.keras.layers import Activation, Conv2D
+import tensorflow.keras.backend as K
 import tensorflow as tf
-from keras.layers import Layer
+from tensorflow.keras.layers import Layer
 
 
 class PAM(Layer):
