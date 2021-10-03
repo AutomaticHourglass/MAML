@@ -21,11 +21,13 @@ class SSegModel:
             self.model = None
 
     def train(self,tr_data,tr_label,val_data,val_label):
+        create_callbacks()
+
         self.model.compile(optimizer='Adam',loss=tensorflow.losses.CategoricalCrossentropy())
         self.model_history = self.model.fit(tr_data,tr_label,epochs=self.train_params.epochs,
             batch_size=self.train_params.batch_size,use_multiprocessing=True,workers=8,
             validation_data=(val_data,val_label),verbose=1,
-            callbacks=self.train_params.callbacks)
+            callbacks=self.callbacks)
 
         plt.semilogy(self.model_history.history['loss'])
         plt.semilogy(self.model_history.history['val_loss'])
@@ -34,6 +36,21 @@ class SSegModel:
         plt.title(f'{self.model_name} - Loss')
         plt.legend(['Train','Validation'])
         plt.show()
+
+    def create_callbacks(self):
+        self.callbacks = []
+        self.callbacks += [tf.keras.callbacks.EarlyStopping(monitor='val_loss',
+            patience=patience,restore_best_weights=True)]
+        
+        def scheduler(lr_decay_start,lr_exp):
+            if epoch < lr_decay_start:
+                return lr
+            else:
+                return lr * lr_exp
+
+        sc = scheduler(self.train_params.lr_decay_start,self.train_params.lr_exp)
+        
+        self.callbacks += [tf.keras.callbacks.LearningRateScheduler(sc)]
 
     def evaluate(self):
         model.acc = 0.5
