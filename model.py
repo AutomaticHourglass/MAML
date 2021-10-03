@@ -36,7 +36,7 @@ class SSegModel:
         self.callbacks += [tensorflow.keras.callbacks.LearningRateScheduler(scheduler)]
 
     def train(self,tr_data,tr_label,val_data,val_label):
-        create_callbacks()
+        self.create_callbacks()
 
         tr_label_cat = to_categorical(tr_label,self.model_params['num_classes'])
         val_label_cat = to_categorical(val_label,self.model_params['num_classes'])
