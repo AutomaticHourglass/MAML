@@ -8,6 +8,8 @@ import tensorflow
 from tensorflow.keras.utils import to_categorical
 import numpy as np
 from .common import *
+import pickle
+import gzip
 
 class SSegModel:
     def __init__(self,model_name,model_params,train_params):
@@ -71,12 +73,14 @@ class SSegModel:
         self.pred_cl = np.argmax(self.pred_ts,axis=3)
 
         self.acc = np.mean(ts_label == self.pred_cl)
-        print(self.acc)
+        print(f'{self.model_name} accuracy: {self.acc}')
 
         self.pred_img = reconstruct_image(self.pred_cl,ts_coords,self.model_params['input_shape'][0])
         plt.imshow(self.pred_img[::5,::5],)
-        plt.imsave(f'label_ts_{self.model_name}.png',vmin=0,vmax=self.model_params['num_classes'])
+        plt.imsave(f'label_ts_{self.model_name}.png',self.pred_img,vmin=0,vmax=self.model_params['num_classes'])
         plt.show()
+
+        pickle.dump(self,gzip.open(f'model_{self.model_name}.pkl.gz','wb'))
         
     def save(self):
         pass
