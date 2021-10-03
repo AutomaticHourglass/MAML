@@ -1,7 +1,7 @@
 # General collecting part of all the models
 
-import model_segnet
-import model_danet
+# import model_segnet
+# import model_danet
 from keras_unet.models.custom_unet import custom_unet
 
 class SSegModel():
