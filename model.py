@@ -72,8 +72,8 @@ class SSegModel:
         plt.savefig(f'results/loss_{self.model_name}.png',dpi=300,bbox_inches='tight')
         plt.show()
 
-        self.pred_ts = self.model.predict(ts_data)
-        self.pred_cl = np.argmax(self.pred_ts,axis=3).astype(np.int8)
+        pred_ts = self.model.predict(ts_data)
+        self.pred_cl = np.argmax(pred_ts,axis=3).astype(np.int8)
         self.acc = np.mean(ts_label == self.pred_cl)
         print(f'{self.model_name} accuracy: {self.acc}')
 
