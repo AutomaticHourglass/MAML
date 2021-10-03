@@ -132,3 +132,4 @@ def reconstruct_image(label_img,coords):
     for patch_label,coordx, coordy in tqdm(zip(label_img,coords[0],coords[1])):
         canvas[coordx:coordx+img_size,coordy:coordy+img_size] = patch_label
     return canvas
+
