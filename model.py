@@ -41,7 +41,7 @@ class SSegModel:
     def create_callbacks(self):
         self.callbacks = []
         self.callbacks += [tensorflow.keras.callbacks.EarlyStopping(monitor='val_loss',
-            patience=patience,restore_best_weights=True)]
+            patience=self.train_params.callback_params.patience,restore_best_weights=True)]
         
         def scheduler(lr_decay_start,lr_exp):
             if epoch < lr_decay_start:
@@ -49,7 +49,7 @@ class SSegModel:
             else:
                 return lr * lr_exp
 
-        sc = scheduler(self.train_params.lr_decay_start,self.train_params.lr_exp)
+        sc = scheduler(self.train_params.callback_params.lr_decay_start,self.train_params.callback_params.lr_exp)
         
         self.callbacks += [tensorflow.keras.callbacks.LearningRateScheduler(sc)]
 
