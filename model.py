@@ -27,7 +27,7 @@ class SSegModel:
         else:
             self.model = None
 
-    os.makedir('results')
+    os.mkdir('results')
 
     def create_callbacks(self):
         self.adam = tensorflow.keras.optimizers.Adam(learning_rate=self.train_params['learning_rate'])
