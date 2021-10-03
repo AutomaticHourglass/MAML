@@ -5,6 +5,7 @@ from . import model_danet
 from .keras_unet.models.custom_unet import custom_unet
 import matplotlib.pyplot as plt
 import tensorflow
+from tensorflow.keras.utils import to_categorical
 
 class SSegModel:
     def __init__(self,model_name,model_params,train_params):
@@ -21,23 +22,6 @@ class SSegModel:
         else:
             self.model = None
 
-    def train(self,tr_data,tr_label,val_data,val_label):
-        create_callbacks()
-
-        self.model.compile(optimizer='Adam',loss=tensorflow.losses.CategoricalCrossentropy())
-        self.model_history = self.model.fit(tr_data,tr_label,epochs=self.train_params['epochs'],
-            batch_size=self.train_params['batch_size'],use_multiprocessing=True,workers=8,
-            validation_data=(val_data,val_label),verbose=1,
-            callbacks=self.callbacks)
-
-        plt.semilogy(self.model_history.history['loss'])
-        plt.semilogy(self.model_history.history['val_loss'])
-        plt.xlabel('Epoch')
-        plt.ylabel('Loss')
-        plt.title(f'{self.model_name} - Loss')
-        plt.legend(['Train','Validation'])
-        plt.show()
-
     def create_callbacks(self):
         self.callbacks = []
         self.callbacks += [tensorflow.keras.callbacks.EarlyStopping(monitor='val_loss',
@@ -50,6 +34,26 @@ class SSegModel:
                 return lr * self.train_params['callback_params']['lr_exp']
 
         self.callbacks += [tensorflow.keras.callbacks.LearningRateScheduler(scheduler)]
+
+    def train(self,tr_data,tr_label,val_data,val_label):
+        create_callbacks()
+
+        tr_label_cat = to_categorical(tr_label,self.model_params['num_classes'])
+        val_label_cat = to_categorical(val_label,self.model_params['num_classes'])
+
+        self.model.compile(optimizer='Adam',loss=tensorflow.losses.CategoricalCrossentropy())
+        self.model_history = self.model.fit(tr_data,tr_label_cat,epochs=self.train_params['epochs'],
+            batch_size=self.train_params['batch_size'],use_multiprocessing=True,workers=8,
+            validation_data=(val_data,val_label_cat),verbose=1,
+            callbacks=self.callbacks)
+
+        plt.semilogy(self.model_history.history['loss'])
+        plt.semilogy(self.model_history.history['val_loss'])
+        plt.xlabel('Epoch')
+        plt.ylabel('Loss')
+        plt.title(f'{self.model_name} - Loss')
+        plt.legend(['Train','Validation'])
+        plt.show()
 
     def evaluate(self):
         model.acc = 0.5
