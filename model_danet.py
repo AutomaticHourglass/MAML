@@ -1,13 +1,13 @@
-from tensorflow.keras.models import Model
-from tensorflow.keras.layers import Input, Activation, Conv2D, Dropout
-from tensorflow.keras.layers import MaxPooling2D, BatchNormalization
-from tensorflow.keras.layers import UpSampling2D
-from tensorflow.keras.layers import concatenate
-from tensorflow.keras.layers import add
-from tensorflow.keras.layers import Activation, Conv2D
-import tensorflow.keras.backend as K
+from keras.models import Model
+from keras.layers import Input, Activation, Conv2D, Dropout
+from keras.layers import MaxPooling2D, BatchNormalization
+from keras.layers import UpSampling2D
+from keras.layers import concatenate
+from keras.layers import add
+from keras.layers import Activation, Conv2D
+import keras.backend as K
 import tensorflow as tf
-from tensorflow.keras.layers import Layer
+from keras.layers import Layer
 
 
 class PAM(Layer):
@@ -35,7 +35,6 @@ class PAM(Layer):
 
     def call(self, input):
         input_shape = input.get_shape().as_list()
-        print(input_shape)
         _, h, w, filters = input_shape
 
         b = Conv2D(filters // 8, 1, use_bias=False, kernel_initializer='he_normal')(input)
@@ -155,8 +154,8 @@ def bottleneck_Block(input, out_filters, strides=(1, 1), dilation=(1, 1), with_c
     return x
 
 
-def danet_resnet101(input_shape, num_classes):
-    input = Input(shape=input_shape)
+def danet_resnet101(height, width, channel, classes):
+    input = Input(shape=(height, width, channel))
 
     conv1_1 = Conv2D(64, 7, strides=(2, 2), padding='same', use_bias=False, kernel_initializer='he_normal')(input)
     conv1_1 = BatchNormalization(axis=3)(conv1_1)
@@ -244,7 +243,7 @@ def danet_resnet101(input_shape, num_classes):
     conv10 = Conv2d_BN(up10, 64, 3)
     conv10 = Conv2d_BN(conv10, 64, 3)
 
-    conv11 = Conv2d_BN(conv10, num_classes, 1, use_activation=None)
+    conv11 = Conv2d_BN(conv10, classes, 1, use_activation=None)
     activation = Activation('softmax', name='Classification')(conv11)
 
     model = Model(inputs=input, outputs=activation)
