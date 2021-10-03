@@ -7,6 +7,7 @@ import matplotlib.pyplot as plt
 import tensorflow
 from tensorflow.keras.utils import to_categorical
 import numpy as np
+from .common import *
 
 class SSegModel:
     def __init__(self,model_name,model_params,train_params):
@@ -62,16 +63,20 @@ class SSegModel:
         plt.ylabel('Loss')
         plt.title(f'{self.model_name} - Loss')
         plt.legend(['Train','Validation'])
+        plt.savefig(f'loss_{self.model_name}.png',dpi=300,bbox_inches='tight')
         plt.show()
 
-    def evaluate(self,ts_data,ts_label):
-        pred_ts = self.model.predict(ts_data)
-        pred_cl = np.argmax(pred_ts,axis=3)
+    def evaluate(self,ts_data,ts_label,ts_coords):
+        self.pred_ts = self.model.predict(ts_data)
+        self.pred_cl = np.argmax(self.pred_ts,axis=3)
 
-        self.acc = np.mean(ts_label == pred_cl)
+        self.acc = np.mean(ts_label == self.pred_cl)
         print(self.acc)
 
-        return self.acc
+        self.pred_img = reconstruct_image(self.pred_cl,ts_coords)
+        plt.imshow(self.pred_img[::5,::5],)
+        plt.imsave(f'label_ts_{self.model_name}.png',vmin=0,vmax=self.model_params['num_classes'])
+        plt.show()
         
     def save(self):
         pass
