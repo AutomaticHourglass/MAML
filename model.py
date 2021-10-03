@@ -92,7 +92,7 @@ class SSegModel:
 
     def save_model(self):
         now = datetime.now().strftime('%Y%m%d_%H%M%S')
-        folder_name = f'{self.dataset_name}_unet_{now}_{self.acc:.4f}'
+        folder_name = f'{self.dataset_name}_unet_{now}_{int(self.acc*1e4)}'
         print(f'Moving files to {folder_name}')
         shutil.move('results',folder_name)
         return folder_name
