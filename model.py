@@ -24,6 +24,8 @@ class SSegModel:
             self.model = None
 
     def create_callbacks(self):
+        self.adam = tensorflow.keras.optimizers.Adam(learning_rate=self.train_params['learning_rate'])
+        
         self.callbacks = []
         self.callbacks += [tensorflow.keras.callbacks.EarlyStopping(monitor='val_loss',
             patience=self.train_params['callback_params']['patience'],restore_best_weights=True)]
@@ -42,10 +44,13 @@ class SSegModel:
         tr_label_cat = to_categorical(tr_label,num_classes)
         ts_label_cat = to_categorical(ts_label,num_classes)
 
-        adam = tensorflow.keras.optimizers.Adam(learning_rate=learning_rate)
-        lr_metric = get_lr_metric(adam)
+        def get_lr_metric(optimizer):
+            def lr(y_true, y_pred):
+                return optimizer.lr
+            return lr
+        lr_metric = get_lr_metric(self.adam)
 
-        self.model.compile(optimizer=adam,loss=tensorflow.losses.CategoricalCrossentropy(),metrics = ['categorical_accuracy',lr_metric])
+        self.model.compile(optimizer=self.adam,loss=tensorflow.losses.CategoricalCrossentropy(),metrics = ['categorical_accuracy',lr_metric])
         self.model_history = self.model.fit(tr_data,tr_label_cat,epochs=self.train_params['epochs'],
             batch_size=self.train_params['batch_size'],use_multiprocessing=True,workers=8,
             validation_data=(ts_data,ts_label_cat),verbose=1,
