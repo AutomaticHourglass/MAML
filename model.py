@@ -27,7 +27,7 @@ class SSegModel:
         else:
             self.model = None
 
-    if(!os.path.isdir('results')):
+    if(~os.path.isdir('results')):
         os.mkdir('results')
 
     def create_callbacks(self):
