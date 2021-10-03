@@ -11,9 +11,12 @@ from .common import *
 import gzip
 import dill
 import os, shutil
+from datetime import datetime
+import json
 
 class SSegModel:
-    def __init__(self,model_name,model_params,train_params):
+    def __init__(self,dataset_name,model_name,model_params,train_params):
+        self.dataset_name = dataset_name
         self.model_name = model_name
         self.model_params = model_params
         self.train_params = train_params
@@ -84,6 +87,23 @@ class SSegModel:
         plt.show()
 
         dill.dump(self,gzip.open(f'results/model_{self.model_name}.pkl.gz','wb'))
-        
-    def save(self):
-        pass
+
+    def save_dataset(self):
+        now = datetime.now().strftime('%Y%m%d_%H%M%S')
+        self.folder_name = f'{self.dataset_name}_unet_{now}_{self.model.acc:.4f}'
+        shutil.move('results',self.folder_name)
+
+        dataset_json = {
+        "title": f'{self.folder_name}',
+        "id": f'automatichourglass/{self.folder_name}',
+        "licenses": [
+            {
+            "name": "CC0-1.0"
+            }
+        ]
+        }
+
+        with open(f'{self.folder_name}/dataset-metadata.json', 'w') as file:
+            json.dump(dataset_json, file)
+
+        !kaggle datasets create -p $folder_name
