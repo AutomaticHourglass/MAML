@@ -87,23 +87,3 @@ class SSegModel:
         plt.show()
 
         dill.dump(self,gzip.open(f'results/model_{self.model_name}.pkl.gz','wb'))
-
-    def save_dataset(self):
-        now = datetime.now().strftime('%Y%m%d_%H%M%S')
-        self.folder_name = f'{self.dataset_name}_unet_{now}_{self.model.acc:.4f}'
-        shutil.move('results',self.folder_name)
-
-        dataset_json = {
-        "title": f'{self.folder_name}',
-        "id": f'automatichourglass/{self.folder_name}',
-        "licenses": [
-            {
-            "name": "CC0-1.0"
-            }
-        ]
-        }
-
-        with open(f'{self.folder_name}/dataset-metadata.json', 'w') as file:
-            json.dump(dataset_json, file)
-
-        !kaggle datasets create -p $folder_name
