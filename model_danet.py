@@ -35,6 +35,7 @@ class PAM(Layer):
 
     def call(self, input):
         input_shape = input.get_shape().as_list()
+        print(input_shape)
         _, h, w, filters = input_shape
 
         b = Conv2D(filters // 8, 1, use_bias=False, kernel_initializer='he_normal')(input)
@@ -156,7 +157,6 @@ def bottleneck_Block(input, out_filters, strides=(1, 1), dilation=(1, 1), with_c
 
 def danet_resnet101(input_shape, num_classes):
     input = Input(shape=input_shape)
-    print(input)
 
     conv1_1 = Conv2D(64, 7, strides=(2, 2), padding='same', use_bias=False, kernel_initializer='he_normal')(input)
     conv1_1 = BatchNormalization(axis=3)(conv1_1)
