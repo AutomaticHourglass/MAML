@@ -6,6 +6,7 @@ from .keras_unet.models.custom_unet import custom_unet
 import matplotlib.pyplot as plt
 import tensorflow
 from tensorflow.keras.utils import to_categorical
+import numpy as np
 
 class SSegModel:
     def __init__(self,model_name,model_params,train_params):
@@ -35,16 +36,16 @@ class SSegModel:
 
         self.callbacks += [tensorflow.keras.callbacks.LearningRateScheduler(scheduler)]
 
-    def train(self,tr_data,tr_label,val_data,val_label):
+    def train(self,tr_data,tr_label,tr_coords,ts_data,ts_label,ts_coords,num_classes):
         self.create_callbacks()
 
-        tr_label_cat = to_categorical(tr_label,self.model_params['num_classes'])
-        val_label_cat = to_categorical(val_label,self.model_params['num_classes'])
+        tr_label_cat = to_categorical(tr_label,num_classes)
+        ts_label_cat = to_categorical(ts_label,num_classes)
 
         self.model.compile(optimizer='Adam',loss=tensorflow.losses.CategoricalCrossentropy())
         self.model_history = self.model.fit(tr_data,tr_label_cat,epochs=self.train_params['epochs'],
             batch_size=self.train_params['batch_size'],use_multiprocessing=True,workers=8,
-            validation_data=(val_data,val_label_cat),verbose=1,
+            validation_data=(ts_data,ts_label_cat),verbose=1,
             callbacks=self.callbacks)
 
         plt.semilogy(self.model_history.history['loss'])
@@ -55,9 +56,14 @@ class SSegModel:
         plt.legend(['Train','Validation'])
         plt.show()
 
-    def evaluate(self):
-        model.acc = 0.5
-        pass
+    def evaluate(self,ts_data,ts_label):
+        pred_ts = self.model.predict(ts_data)
+        pred_cl = np.argmax(pred_ts,axis=3)
 
+        self.acc = np.mean(ts_label == pred_cl)
+        print(self.acc)
+
+        return self.acc
+        
     def save(self):
         pass
