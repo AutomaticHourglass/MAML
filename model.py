@@ -8,8 +8,8 @@ import tensorflow
 from tensorflow.keras.utils import to_categorical
 import numpy as np
 from .common import *
-import pickle
 import gzip
+import dill
 
 class SSegModel:
     def __init__(self,model_name,model_params,train_params):
@@ -80,7 +80,7 @@ class SSegModel:
         plt.imsave(f'label_ts_{self.model_name}.png',self.pred_img,vmin=0,vmax=self.model_params['num_classes'])
         plt.show()
 
-        pickle.dump(self,gzip.open(f'model_{self.model_name}.pkl.gz','wb'))
+        dill.dump(self,gzip.open(f'model_{self.model_name}.pkl.gz','wb'))
         
     def save(self):
         pass
