@@ -42,7 +42,10 @@ class SSegModel:
         tr_label_cat = to_categorical(tr_label,num_classes)
         ts_label_cat = to_categorical(ts_label,num_classes)
 
-        self.model.compile(optimizer='Adam',loss=tensorflow.losses.CategoricalCrossentropy())
+        adam = tf.keras.optimizers.Adam(learning_rate=learning_rate)
+        lr_metric = get_lr_metric(adam)
+
+        self.model.compile(optimizer=adam,loss=tensorflow.losses.CategoricalCrossentropy(),metrics = ['categorical_accuracy',lr_metric])
         self.model_history = self.model.fit(tr_data,tr_label_cat,epochs=self.train_params['epochs'],
             batch_size=self.train_params['batch_size'],use_multiprocessing=True,workers=8,
             validation_data=(ts_data,ts_label_cat),verbose=1,
