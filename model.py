@@ -25,8 +25,8 @@ class SSegModel:
         create_callbacks()
 
         self.model.compile(optimizer='Adam',loss=tensorflow.losses.CategoricalCrossentropy())
-        self.model_history = self.model.fit(tr_data,tr_label,epochs=self.train_params.epochs,
-            batch_size=self.train_params.batch_size,use_multiprocessing=True,workers=8,
+        self.model_history = self.model.fit(tr_data,tr_label,epochs=self.train_params['epochs'],
+            batch_size=self.train_params['batch_size'],use_multiprocessing=True,workers=8,
             validation_data=(val_data,val_label),verbose=1,
             callbacks=self.callbacks)
 
