@@ -5,11 +5,12 @@
 from .keras_unet.models.custom_unet import custom_unet
 
 class SSegModel:
-    def __init__(self,model_name,model_params):
-        if(model_name == 'unet'):
-            self.model = custom_unet(**model_params)
-        else:
-            self.model = None
+    pass
+    # def __init__(self,model_name,model_params):
+    #     if(model_name == 'unet'):
+    #         self.model = custom_unet(**model_params)
+    #     else:
+    #         self.model = None
 
-    def hello(self):
-        pass
+    # def hello(self):
+    #     pass
