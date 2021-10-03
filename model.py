@@ -18,8 +18,8 @@ class SSegModel:
         elif(model_name) == 'segnet':
             self.model = model_segnet.segnet(**model_params)
         elif(model_name) == 'danet':
-            self.model = model_danet.danet_resnet101(model_params['image_shape'][0],model_params['image_shape'][1],
-                model_params['image_shape'][2],model_params['num_classes'])
+            self.model = model_danet.danet_resnet101(model_params['input_shape'][0],model_params['input_shape'][1],
+                model_params['input_shape'][2],model_params['num_classes'])
         else:
             self.model = None
 
