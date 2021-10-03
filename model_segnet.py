@@ -15,7 +15,7 @@ IMAGE_ORDERING = IMAGE_ORDERING_CHANNELS_LAST
 class_colors = [(random.randint(0, 255), random.randint(
     0, 255), random.randint(0, 255)) for _ in range(5000)]
 
-def vanilla_encoder(input_height=224,  input_width=224):
+def vanilla_encoder(input_height=224,  input_width=224, channels = 5):
 
     kernel = 3
     filter_size = 64
@@ -23,9 +23,9 @@ def vanilla_encoder(input_height=224,  input_width=224):
     pool_size = 2
 
     if IMAGE_ORDERING == 'channels_first':
-        img_input = Input(shape=(4, input_height, input_width))
+        img_input = Input(shape=(channels, input_height, input_width))
     elif IMAGE_ORDERING == 'channels_last':
-        img_input = Input(shape=(input_height, input_width, 4))
+        img_input = Input(shape=(input_height, input_width, channels))
 
     x = img_input
     levels = []
@@ -322,11 +322,11 @@ def segnet_decoder(f, num_classes, n_up=3):
 
     return o
 
-def _segnet(num_classes, encoder,  input_height=416, input_width=608,
+def _segnet(num_classes, encoder,  input_height=416, input_width=608, channels=5,
             encoder_level=3):
 
     img_input, levels = encoder(
-        input_height=input_height,  input_width=input_width)
+        input_height=input_height,  input_width=input_width, channels=channels)
 
     feat = levels[encoder_level]
     o = segnet_decoder(feat, num_classes, n_up=3)
@@ -335,10 +335,10 @@ def _segnet(num_classes, encoder,  input_height=416, input_width=608,
     return model
 
 
-def segnet(num_classes, input_height=416, input_width=608, encoder_level=3):
+def segnet(num_classes, input_shape=(256,256,5), encoder_level=3):
 
-    model = _segnet(num_classes, vanilla_encoder,  input_height=input_height,
-                    input_width=input_width, encoder_level=encoder_level)
+    model = _segnet(num_classes, vanilla_encoder,  input_height=input_shape[0],
+                    input_width=input_shape[1], channels=input_shape[2], encoder_level=encoder_level)
     model.model_name = "segnet"
     return model
 
