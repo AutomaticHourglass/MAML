@@ -79,7 +79,7 @@ class SSegModel:
 
         pred_img = reconstruct_image(self.pred_cl,ts_coords,self.model_params['input_shape'][0])
         plt.imshow(pred_img[::5,::5],)
-        plt.imsave(f'results/label_ts_{self.model_name}.png',self.pred_img,vmin=0,vmax=self.model_params['num_classes'])
+        plt.imsave(f'results/label_ts_{self.model_name}.png',pred_img,vmin=0,vmax=self.model_params['num_classes'])
         plt.show()
 
         dill.dump(self,gzip.open(f'results/model_{self.model_name}.pkl.gz','wb'))
