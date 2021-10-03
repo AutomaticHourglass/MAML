@@ -89,3 +89,10 @@ class SSegModel:
         plt.show()
 
         dill.dump(self,gzip.open(f'results/model_{self.model_name}.pkl.gz','wb'))
+
+    def save_model(self):
+        now = datetime.now().strftime('%Y%m%d_%H%M%S')
+        folder_name = f'{self.dataset_name}_unet_{now}_{self.acc:.4f}'
+        print(f'Moving files to {folder_name}')
+        shutil.move('results',folder_name)
+        return folder_name
