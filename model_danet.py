@@ -154,7 +154,7 @@ def bottleneck_Block(input, out_filters, strides=(1, 1), dilation=(1, 1), with_c
     return x
 
 
-def danet_resnet101(height, width, channel, classes):
+def danet_resnet101(height, width, channel, num_classes):
     input = Input(shape=(height, width, channel))
 
     conv1_1 = Conv2D(64, 7, strides=(2, 2), padding='same', use_bias=False, kernel_initializer='he_normal')(input)
@@ -243,7 +243,7 @@ def danet_resnet101(height, width, channel, classes):
     conv10 = Conv2d_BN(up10, 64, 3)
     conv10 = Conv2d_BN(conv10, 64, 3)
 
-    conv11 = Conv2d_BN(conv10, classes, 1, use_activation=None)
+    conv11 = Conv2d_BN(conv10, num_classes, 1, use_activation=None)
     activation = Activation('softmax', name='Classification')(conv11)
 
     model = Model(inputs=input, outputs=activation)

@@ -63,7 +63,7 @@ def train(model,
           train_annotations,
           input_height=None,
           input_width=None,
-          n_classes=None,
+          num_classes=None,
           verify_dataset=True,
           checkpoints_path=None,
           epochs=5,
@@ -86,14 +86,14 @@ def train(model,
     # check if user gives model name instead of the model object
     if isinstance(model, six.string_types):
         # create the model from the name
-        assert (n_classes is not None), "Please provide the n_classes"
+        assert (num_classes is not None), "Please provide the num_classes"
         if (input_height is not None) and (input_width is not None):
             model = model_from_name[model](
-                n_classes, input_height=input_height, input_width=input_width)
+                num_classes, input_height=input_height, input_width=input_width)
         else:
-            model = model_from_name[model](n_classes)
+            model = model_from_name[model](num_classes)
 
-    n_classes = model.n_classes
+    num_classes = model.num_classes
     input_height = model.input_height
     input_width = model.input_width
     output_height = model.output_height
@@ -118,7 +118,7 @@ def train(model,
         with open(checkpoints_path+"_config.json", "w") as f:
             json.dump({
                 "model_class": model.model_name,
-                "n_classes": n_classes,
+                "num_classes": num_classes,
                 "input_height": input_height,
                 "input_width": input_width,
                 "output_height": output_height,
@@ -140,24 +140,24 @@ def train(model,
         print("Verifying training dataset")
         verified = verify_segmentation_dataset(train_images,
                                                train_annotations,
-                                               n_classes)
+                                               num_classes)
         assert verified
         if validate:
             print("Verifying validation dataset")
             verified = verify_segmentation_dataset(val_images,
                                                    val_annotations,
-                                                   n_classes)
+                                                   num_classes)
             assert verified
 
     train_gen = image_segmentation_generator(
-        train_images, train_annotations,  batch_size,  n_classes,
+        train_images, train_annotations,  batch_size,  num_classes,
         input_height, input_width, output_height, output_width,
         do_augment=do_augment, augmentation_name=augmentation_name)
 
     if validate:
         val_gen = image_segmentation_generator(
             val_images, val_annotations,  val_batch_size,
-            n_classes, input_height, input_width, output_height, output_width)
+            num_classes, input_height, input_width, output_height, output_width)
 
     callbacks = [
         CheckpointsCallback(checkpoints_path)
@@ -195,14 +195,14 @@ def predict(model=None, inp=None, out_fname=None,
     output_height = model.output_height
     input_width = model.input_width
     input_height = model.input_height
-    n_classes = model.n_classes
+    num_classes = model.num_classes
 
     x = get_image_array(inp, input_width, input_height,
                         ordering=IMAGE_ORDERING)
     pr = model.predict(np.array([x]))[0]
-    pr = pr.reshape((output_height,  output_width, n_classes)).argmax(axis=2)
+    pr = pr.reshape((output_height,  output_width, num_classes)).argmax(axis=2)
 
-    seg_img = visualize_segmentation(pr, inp, n_classes=n_classes,
+    seg_img = visualize_segmentation(pr, inp, num_classes=num_classes,
                                      colors=colors, overlay_img=overlay_img,
                                      show_legends=show_legends,
                                      class_names=class_names,
@@ -264,7 +264,7 @@ def get_segmentation_model(input, output):
         output_width = o_shape[3]
         input_height = i_shape[2]
         input_width = i_shape[3]
-        n_classes = o_shape[1]
+        num_classes = o_shape[1]
 #         o = (Reshape((-1, output_height*output_width)))(o)
 #         o = (Permute((2, 1)))(o)
     elif IMAGE_ORDERING == 'channels_last':
@@ -272,14 +272,14 @@ def get_segmentation_model(input, output):
         output_width = o_shape[2]
         input_height = i_shape[1]
         input_width = i_shape[2]
-        n_classes = o_shape[3]
+        num_classes = o_shape[3]
 #         o = (Reshape((output_height*output_width, -1)))(o)
 
     o = (Activation('softmax'))(o)
     model = Model(img_input, o)
     model.output_width = output_width
     model.output_height = output_height
-    model.n_classes = n_classes
+    model.num_classes = num_classes
     model.input_height = input_height
     model.input_width = input_width
     model.model_name = ""
@@ -291,7 +291,7 @@ def get_segmentation_model(input, output):
 
     return model
 
-def segnet_decoder(f, n_classes, n_up=3):
+def segnet_decoder(f, num_classes, n_up=3):
 
     assert n_up >= 2
 
@@ -317,27 +317,27 @@ def segnet_decoder(f, n_classes, n_up=3):
     o = (Conv2D(64, (3, 3), padding='valid', data_format=IMAGE_ORDERING))(o)
     o = (BatchNormalization())(o)
 
-    o = Conv2D(n_classes, (3, 3), padding='same',
+    o = Conv2D(num_classes, (3, 3), padding='same',
                data_format=IMAGE_ORDERING)(o)
 
     return o
 
-def _segnet(n_classes, encoder,  input_height=416, input_width=608,
+def _segnet(num_classes, encoder,  input_height=416, input_width=608,
             encoder_level=3):
 
     img_input, levels = encoder(
         input_height=input_height,  input_width=input_width)
 
     feat = levels[encoder_level]
-    o = segnet_decoder(feat, n_classes, n_up=3)
+    o = segnet_decoder(feat, num_classes, n_up=3)
     model = get_segmentation_model(img_input, o)
 
     return model
 
 
-def segnet(n_classes, input_height=416, input_width=608, encoder_level=3):
+def segnet(num_classes, input_height=416, input_width=608, encoder_level=3):
 
-    model = _segnet(n_classes, vanilla_encoder,  input_height=input_height,
+    model = _segnet(num_classes, vanilla_encoder,  input_height=input_height,
                     input_width=input_width, encoder_level=encoder_level)
     model.model_name = "segnet"
     return model
@@ -364,21 +364,21 @@ def evaluate(model=None, inp_images=None, annotations=None,
     assert type(inp_images) is list
     assert type(annotations) is list
 
-    tp = np.zeros(model.n_classes)
-    fp = np.zeros(model.n_classes)
-    fn = np.zeros(model.n_classes)
-    n_pixels = np.zeros(model.n_classes)
+    tp = np.zeros(model.num_classes)
+    fp = np.zeros(model.num_classes)
+    fn = np.zeros(model.num_classes)
+    n_pixels = np.zeros(model.num_classes)
 
     for inp, ann in tqdm(zip(inp_images, annotations)):
         pr = predict(model, inp)
-        gt = get_segmentation_array(ann, model.n_classes,
+        gt = get_segmentation_array(ann, model.num_classes,
                                     model.output_width, model.output_height,
                                     no_reshape=True)
         gt = gt.argmax(-1)
         pr = pr.flatten()
         gt = gt.flatten()
 
-        for cl_i in range(model.n_classes):
+        for cl_i in range(model.num_classes):
 
             tp[cl_i] += np.sum((pr == cl_i) * (gt == cl_i))
             fp[cl_i] += np.sum((pr == cl_i) * ((gt != cl_i)))
