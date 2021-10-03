@@ -1,7 +1,7 @@
 # General collecting part of all the models
 
 from . import model_segnet
-# import model_danet
+from . import model_danet
 from .keras_unet.models.custom_unet import custom_unet
 
 class SSegModel:
@@ -13,5 +13,7 @@ class SSegModel:
             self.model = custom_unet(**model_params)
         elif(model_name) == 'segnet':
             self.model = model_segnet.segnet(**model_params)
+        elif(model_name) == 'danet':
+            self.model = model_danet.danet_resnet101(**model_params)
         else:
             self.model = None
