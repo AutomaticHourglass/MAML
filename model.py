@@ -10,7 +10,7 @@ import numpy as np
 from .common import *
 import gzip
 import dill
-import os
+import os, shutil
 
 class SSegModel:
     def __init__(self,model_name,model_params,train_params):
@@ -62,6 +62,7 @@ class SSegModel:
             validation_data=(ts_data,ts_label_cat),verbose=1,
             callbacks=self.callbacks)
 
+    def evaluate(self,ts_data,ts_label,ts_coords):
         plt.semilogy(self.model_history.history['loss'])
         plt.semilogy(self.model_history.history['val_loss'])
         plt.xlabel('Epoch')
@@ -71,10 +72,8 @@ class SSegModel:
         plt.savefig(f'results/loss_{self.model_name}.png',dpi=300,bbox_inches='tight')
         plt.show()
 
-    def evaluate(self,ts_data,ts_label,ts_coords):
         self.pred_ts = self.model.predict(ts_data)
-        self.pred_cl = np.argmax(self.pred_ts,axis=3)
-
+        self.pred_cl = np.argmax(self.pred_ts,axis=3).astype(np.int8)
         self.acc = np.mean(ts_label == self.pred_cl)
         print(f'{self.model_name} accuracy: {self.acc}')
 
