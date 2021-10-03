@@ -30,7 +30,7 @@ class SSegModel:
         else:
             self.model = None
 
-        if(os.path.isdir('results') == True):
+        if(os.path.isdir('results')):
             shutil.rmtree('results')
         os.mkdir('results')
 
@@ -91,7 +91,7 @@ class SSegModel:
 
     def save_model(self):
         now = datetime.now().strftime('%Y%m%d-%H%M%S')
-        folder_name = f'{self.dataset_name}-unet-{now}-{int(self.acc*1e4)}'
+        folder_name = f'{self.dataset_name}-{self.model_name}-{now}-{int(self.acc*1e4)}'
         print(f'Moving files to {folder_name}')
         shutil.move('results',folder_name)
         return folder_name
