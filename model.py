@@ -55,6 +55,8 @@ class SSegModel:
             else:
                 if (epoch+1) % self.train_params['callback_params']['lr_decay_start'] == 0:
                     return lr / self.train_params['callback_params']['lr_exp']
+                else:
+                    return lr
 
         self.callbacks += [tensorflow.keras.callbacks.LearningRateScheduler(scheduler)]
 
