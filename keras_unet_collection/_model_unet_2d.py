@@ -1,7 +1,7 @@
 
 from __future__ import absolute_import
 
-from layer_utils import *
+from .layer_utils import *
 from keras_unet_collection.activations import GELU, Snake
 from keras_unet_collection._backbone_zoo import backbone_zoo, bach_norm_checker
 
