@@ -329,7 +329,7 @@ def _segnet(num_classes, encoder,  input_height=416, input_width=608, channels=5
         input_height=input_height,  input_width=input_width, channels=channels)
 
     feat = levels[encoder_level]
-    o = segnet_decoder(feat, num_classes, n_up=encoder_level)
+    o = segnet_decoder(feat, num_classes, n_up=encoder_level+1)
     model = get_segmentation_model(img_input, o)
 
     return model
