@@ -348,3 +348,6 @@ def transunet_2d(input_shape, filter_num, num_classes, stack_num_down=2, stack_n
     model = Model(inputs=[IN,], outputs=[OUT,], name='{}_model'.format(name))
     
     return model
+
+
+
