@@ -1,8 +1,8 @@
 
 from __future__ import absolute_import
 
-from keras_unet_collection.layer_utils import *
-from keras_unet_collection.transformer_layers import patch_extract, patch_embedding, SwinTransformerBlock, patch_merging, patch_expanding
+from .layer_utils import *
+from .transformer_layers import patch_extract, patch_embedding, SwinTransformerBlock, patch_merging, patch_expanding
 
 from tensorflow.keras.layers import Input, Dense
 from tensorflow.keras.models import Model
