@@ -13,6 +13,7 @@ import dill
 import os, shutil
 from datetime import datetime
 import json
+from .keras_unet_collection.models import *
 
 class SSegModel:
     def __init__(self,dataset_name,model_name,model_params,train_params):
@@ -27,6 +28,8 @@ class SSegModel:
             self.model = model_segnet.segnet(**model_params)
         elif(model_name) == 'danet':
             self.model = model_danet.danet_resnet101(**model_params)
+        elif(model_name) == 'transunet':
+            self.model = transunet_2d(**model_params)
         else:
             self.model = None
 
