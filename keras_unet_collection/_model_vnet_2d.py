@@ -158,7 +158,7 @@ def vnet_2d_base(input_tensor, filter_num, res_num_ini=1, res_num_max=3,
 
     X_skip = X_skip[:-1][::-1]
     filter_num = filter_num[:-1][::-1]
-    res_num_list = res_num_list[:-1][::-1]
+    res_num_list = res_num_list[::-1]
 
     # upsampling levels
     for i, f in enumerate(filter_num):
