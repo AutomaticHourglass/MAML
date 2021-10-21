@@ -90,11 +90,11 @@ class SSegModel:
 
         self.callbacks += [tensorflow.keras.callbacks.LearningRateScheduler(scheduler)]
 
-    def train(self,tr_data,tr_label,tr_coords,ts_data,ts_label,ts_coords,num_classes):
+    def train(self,tr_data,tr_label,tr_coords,ts_data,ts_label,ts_coords,n_labels):
         self.create_callbacks()
 
-        tr_label_cat = to_categorical(tr_label,num_classes)
-        ts_label_cat = to_categorical(ts_label,num_classes)
+        tr_label_cat = to_categorical(tr_label,n_labels)
+        ts_label_cat = to_categorical(ts_label,n_labels)
 
         def get_lr_metric(optimizer):
             def lr(y_true, y_pred):
@@ -123,9 +123,9 @@ class SSegModel:
         self.acc = np.mean(ts_label == self.pred_cl)
         print(f'{self.model_name} accuracy: {self.acc}')
 
-        pred_img = reconstruct_image(self.pred_cl,ts_coords,self.model_params['input_shape'][0])
+        pred_img = reconstruct_image(self.pred_cl,ts_coords,self.model_params['input_size'][0])
         plt.imshow(pred_img[::5,::5],)
-        plt.imsave(f'results/label_ts_{self.model_name}.png',pred_img,vmin=0,vmax=self.model_params['num_classes'])
+        plt.imsave(f'results/label_ts_{self.model_name}.png',pred_img,vmin=0,vmax=self.model_params['n_labels'])
         plt.show()
 
         dill.dump(self,gzip.open(f'results/model_{self.model_name}.pkl.gz','wb'))
