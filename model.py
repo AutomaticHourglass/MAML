@@ -15,6 +15,18 @@ from datetime import datetime
 import json
 from .keras_unet_collection.models import *
 
+from ._model_unet_2d import unet_2d
+from ._model_vnet_2d import vnet_2d
+from ._model_unet_plus_2d import unet_plus_2d
+from ._model_r2_unet_2d import r2_unet_2d
+from ._model_att_unet_2d import att_unet_2d
+from ._model_resunet_a_2d import resunet_a_2d
+from ._model_u2net_2d import u2net_2d
+from ._model_unet_3plus_2d import unet_3plus_2d
+from ._model_transunet_2d import transunet_2d
+from ._model_swin_unet_2d import swin_unet_2d
+
+
 class SSegModel:
     def __init__(self,dataset_name,model_name,model_params,train_params):
         self.dataset_name = dataset_name
@@ -22,14 +34,32 @@ class SSegModel:
         self.model_params = model_params
         self.train_params = train_params
 
-        if(model_name == 'unet'):
+        if(model_name == 'unet_2'):
             self.model = custom_unet(**model_params)
         elif(model_name) == 'segnet':
             self.model = model_segnet.segnet(**model_params)
         elif(model_name) == 'danet':
             self.model = model_danet.danet_resnet101(**model_params)
+        elif(model_name) == 'unet':
+            self.model = unet_2d(**model_params)
+        elif(model_name) == 'vnet':
+            self.model = vnet_2d(**model_params)
+        elif(model_name) == 'unet_plus':
+            self.model = unet_plus_2d(**model_params)
+        elif(model_name) == 'r2_unet':
+            self.model = r2_unet_2d(**model_params)
+        elif(model_name) == 'att_unet':
+            self.model = att_unet_2d(**model_params)
+        elif(model_name) == 'resunet':
+            self.model = resunet_a_2d(**model_params)
+        elif(model_name) == 'u2_net':
+            self.model = u2net_2d(**model_params)
+        elif(model_name) == 'unet3_plus':
+            self.model = unet_3plus_2d(**model_params)
         elif(model_name) == 'transunet':
             self.model = transunet_2d(**model_params)
+        elif(model_name) == 'swinunet':
+            self.model = swin_unet_2d(**model_params)
         else:
             self.model = None
 
