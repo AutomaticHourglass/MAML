@@ -36,29 +36,29 @@ class SSegModel:
 
         if(model_name == 'unet_2'):
             self.model = custom_unet(**model_params)
-        elif(model_name) == 'segnet':
+        elif(model_name == 'segnet'):
             self.model = model_segnet.segnet(**model_params)
-        elif(model_name) == 'danet':
+        elif(model_name == 'danet'):
             self.model = model_danet.danet_resnet101(**model_params)
-        elif(model_name) == 'unet':
+        elif(model_name == 'unet'):
             self.model = unet_2d(**model_params)
-        elif(model_name) == 'vnet':
+        elif(model_name == 'vnet'):
             self.model = vnet_2d(**model_params)
-        elif(model_name) == 'unet_plus':
+        elif(model_name == 'unet_plus'):
             self.model = unet_plus_2d(**model_params)
-        elif(model_name) == 'r2_unet':
+        elif(model_name == 'r2_unet'):
             self.model = r2_unet_2d(**model_params)
-        elif(model_name) == 'att_unet':
+        elif(model_name == 'att_unet'):
             self.model = att_unet_2d(**model_params)
-        elif(model_name) == 'resunet':
+        elif(model_name == 'resunet'):
             self.model = resunet_a_2d(**model_params)
-        elif(model_name) == 'u2_net':
+        elif(model_name == 'u2_net'):
             self.model = u2net_2d(**model_params)
-        elif(model_name) == 'unet3_plus':
+        elif(model_name == 'unet3_plus'):
             self.model = unet_3plus_2d(**model_params)
-        elif(model_name) == 'transunet':
+        elif(model_name == 'transunet'):
             self.model = transunet_2d(**model_params)
-        elif(model_name) == 'swinunet':
+        elif(model_name == 'swinunet'):
             self.model = swin_unet_2d(**model_params)
         else:
             self.model = None
