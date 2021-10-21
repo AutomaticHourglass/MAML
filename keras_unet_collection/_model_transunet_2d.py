@@ -270,7 +270,7 @@ def transunet_2d_base(input_tensor, filter_num, stack_num_down=2, stack_num_up=2
             
     return X
 
-def transunet_2d(input_shape, filter_num, num_classes, stack_num_down=2, stack_num_up=2,
+def transunet_2d(input_size, filter_num, n_labels, stack_num_down=2, stack_num_up=2,
                  embed_dim=768, num_mlp = 3072, num_heads=12, num_transformer=12,
                  activation='ReLU', mlp_activation='GELU', output_activation='Softmax', batch_norm=False, pool=True, unpool=True, 
                  backbone=None, weights='imagenet', freeze_backbone=True, freeze_batch_norm=True, name='transunet'):
@@ -333,7 +333,7 @@ def transunet_2d(input_shape, filter_num, num_classes, stack_num_down=2, stack_n
     
     activation_func = eval(activation)
         
-    IN = Input(input_shape)
+    IN = Input(input_size)
     
     # base    
     X = transunet_2d_base(IN, filter_num, stack_num_down=stack_num_down, stack_num_up=stack_num_up, 
@@ -342,7 +342,7 @@ def transunet_2d(input_shape, filter_num, num_classes, stack_num_down=2, stack_n
                           backbone=backbone, weights=weights, freeze_backbone=freeze_backbone, freeze_batch_norm=freeze_batch_norm, name=name)
     
     # output layer
-    OUT = CONV_output(X, num_classes, kernel_size=1, activation=output_activation, name='{}_output'.format(name))
+    OUT = CONV_output(X, n_labels, kernel_size=1, activation=output_activation, name='{}_output'.format(name))
     
     # functional API model
     model = Model(inputs=[IN,], outputs=[OUT,], name='{}_model'.format(name))
