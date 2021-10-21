@@ -150,7 +150,7 @@ def vnet_2d_base(input_tensor, filter_num, res_num_ini=1, res_num_max=3,
     X_skip.append(X)
 
     # downsampling levels
-    for i, f in enumerate(filter_num[1:]):
+    for i, f in enumerate(filter_num):
         X = vnet_left(X, f, res_num=res_num_list[i+1], activation=activation, pool=pool, 
                       batch_norm=batch_norm, name='{}_down_{}'.format(name, i+1))
 
