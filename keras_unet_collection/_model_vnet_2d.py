@@ -1,8 +1,8 @@
 
 from __future__ import absolute_import
 
-from keras_unet_collection.layer_utils import *
-from keras_unet_collection.activations import GELU, Snake
+from .layer_utils import *
+from .activations import GELU, Snake
 
 from tensorflow.keras.layers import Input
 from tensorflow.keras.models import Model
@@ -161,7 +161,7 @@ def vnet_2d_base(input_tensor, filter_num, res_num_ini=1, res_num_max=3,
     res_num_list = res_num_list[:-1][::-1]
 
     # upsampling levels
-    for i, f in enumerate(filter_num):
+    for i, f in enumerate(filter_num[1:]):
         X = vnet_right(X, [X_skip[i],], f, res_num=res_num_list[i], 
                        activation=activation, unpool=unpool, batch_norm=batch_norm, name='{}_up_{}'.format(name, i))
 
