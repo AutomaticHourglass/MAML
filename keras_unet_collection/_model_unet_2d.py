@@ -222,7 +222,7 @@ def unet_2d_base(input_tensor, filter_num, stack_num_down=2, stack_num_up=2,
                        unpool=unpool, batch_norm=batch_norm, concat=False, name='{}_up{}'.format(name, i_real))   
     return X
 
-def unet_2d(input_size, filter_num, n_labels, stack_num_down=2, stack_num_up=2,
+def unet_2d(input_shape, filter_num, n_labels, stack_num_down=2, stack_num_up=2,
             activation='ReLU', output_activation='Softmax', batch_norm=False, pool=True, unpool=True, 
             backbone=None, weights='imagenet', freeze_backbone=True, freeze_batch_norm=True, name='unet'):
     '''
@@ -282,7 +282,7 @@ def unet_2d(input_size, filter_num, n_labels, stack_num_down=2, stack_num_up=2,
     if backbone is not None:
         bach_norm_checker(backbone, batch_norm)
         
-    IN = Input(input_size)
+    IN = Input(input_shape)
     
     # base    
     X = unet_2d_base(IN, filter_num, stack_num_down=stack_num_down, stack_num_up=stack_num_up, 
