@@ -156,12 +156,12 @@ def vnet_2d_base(input_tensor, filter_num, res_num_ini=1, res_num_max=3,
 
         X_skip.append(X)
 
-    X_skip = X_skip[:-1][::-1]
-    filter_num = filter_num[:-1][::-1]
-    res_num_list = res_num_list[:-1][::-1]
+    X_skip = X_skip[::-1]
+    filter_num = filter_num[::-1]
+    res_num_list = res_num_list[::-1]
 
     # upsampling levels
-    for i, f in enumerate(filter_num[1:]):
+    for i, f in enumerate(filter_num):
         X = vnet_right(X, [X_skip[i],], f, res_num=res_num_list[i], 
                        activation=activation, unpool=unpool, batch_norm=batch_norm, name='{}_up_{}'.format(name, i))
 
