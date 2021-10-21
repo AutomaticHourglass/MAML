@@ -191,13 +191,13 @@ def att_unet_2d_base(input_tensor, filter_num, stack_num_down=2, stack_num_up=2,
                        unpool=unpool, batch_norm=batch_norm, concat=False, name='{}_up{}'.format(name, i_real)) 
     return X
 
-def att_unet_2d(input_size, filter_num, n_labels, stack_num_down=2, stack_num_up=2, activation='ReLU', 
+def att_unet_2d(input_size, filter_num, num_classes, stack_num_down=2, stack_num_up=2, activation='ReLU', 
                 atten_activation='ReLU', attention='add', output_activation='Softmax', batch_norm=False, pool=True, unpool=True, 
                 backbone=None, weights='imagenet', freeze_backbone=True, freeze_batch_norm=True, name='attunet'):
     '''
     Attention U-net with an optional ImageNet backbone
     
-    att_unet_2d(input_size, filter_num, n_labels, stack_num_down=2, stack_num_up=2, activation='ReLU', 
+    att_unet_2d(input_size, filter_num, num_classes, stack_num_down=2, stack_num_up=2, activation='ReLU', 
                 atten_activation='ReLU', attention='add', output_activation='Softmax', batch_norm=False, pool=True, unpool=True, 
                 backbone=None, weights='imagenet', freeze_backbone=True, freeze_batch_norm=True, name='att-unet')
                 
@@ -211,7 +211,7 @@ def att_unet_2d(input_size, filter_num, n_labels, stack_num_down=2, stack_num_up
         filter_num: a list that defines the number of filters for each \
                     down- and upsampling levels. e.g., `[64, 128, 256, 512]`.
                     The depth is expected as `len(filter_num)`.
-        n_labels: number of output labels.
+        num_classes: number of output labels.
         stack_num_down: number of convolutional layers per downsampling level/block. 
         stack_num_up: number of convolutional layers (after concatenation) per upsampling level/block.
         activation: one of the `tensorflow.keras.layers` or `keras_unet_collection.activations` interfaces, e.g., 'ReLU'.
@@ -267,7 +267,7 @@ def att_unet_2d(input_size, filter_num, n_labels, stack_num_down=2, stack_num_up
                          freeze_batch_norm=freeze_backbone, name=name)
     
     # output layer
-    OUT = CONV_output(X, n_labels, kernel_size=1, activation=output_activation, name='{}_output'.format(name))
+    OUT = CONV_output(X, num_classes, kernel_size=1, activation=output_activation, name='{}_output'.format(name))
     
     # functional API model
     model = Model(inputs=[IN,], outputs=[OUT,], name='{}_model'.format(name))

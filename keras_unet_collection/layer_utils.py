@@ -381,16 +381,16 @@ def ASPP_conv(X, channel, activation='ReLU', batch_norm=True, name='aspp'):
     
     return concatenate([b4, b0, b_r6, b_r9, b_r12])
 
-def CONV_output(X, n_labels, kernel_size=1, activation='Softmax', name='conv_output'):
+def CONV_output(X, num_classes, kernel_size=1, activation='Softmax', name='conv_output'):
     '''
     Convolutional layer with output activation.
     
-    CONV_output(X, n_labels, kernel_size=1, activation='Softmax', name='conv_output')
+    CONV_output(X, num_classes, kernel_size=1, activation='Softmax', name='conv_output')
     
     Input
     ----------
         X: input tensor.
-        n_labels: number of classification label(s).
+        num_classes: number of classification label(s).
         kernel_size: size of 2-d convolution kernels. Default is 1-by-1.
         activation: one of the `tensorflow.keras.layers` or `keras_unet_collection.activations` interface or 'Sigmoid'.
                     Default option is 'Softmax'.
@@ -403,7 +403,7 @@ def CONV_output(X, n_labels, kernel_size=1, activation='Softmax', name='conv_out
         
     '''
     
-    X = Conv2D(n_labels, kernel_size, padding='same', use_bias=True, name=name)(X)
+    X = Conv2D(num_classes, kernel_size, padding='same', use_bias=True, name=name)(X)
     
     if activation:
         

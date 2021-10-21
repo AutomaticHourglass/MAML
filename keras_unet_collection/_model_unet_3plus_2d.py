@@ -197,7 +197,7 @@ def unet_3plus_2d_base(input_tensor, filter_num_down, filter_num_skip, filter_nu
     # return decoder outputs
     return X_decoder
 
-def unet_3plus_2d(input_size, n_labels, filter_num_down, filter_num_skip='auto', filter_num_aggregate='auto', 
+def unet_3plus_2d(input_size, num_classes, filter_num_down, filter_num_skip='auto', filter_num_aggregate='auto', 
                   stack_num_down=2, stack_num_up=1, activation='ReLU', output_activation='Sigmoid',
                   batch_norm=False, pool=True, unpool=True, deep_supervision=False, 
                   backbone=None, weights='imagenet', freeze_backbone=True, freeze_batch_norm=True, name='unet3plus'):
@@ -205,7 +205,7 @@ def unet_3plus_2d(input_size, n_labels, filter_num_down, filter_num_skip='auto',
     '''
     UNET 3+ with an optional ImageNet-trained backbone.
     
-    unet_3plus_2d(input_size, n_labels, filter_num_down, filter_num_skip='auto', filter_num_aggregate='auto', 
+    unet_3plus_2d(input_size, num_classes, filter_num_down, filter_num_skip='auto', filter_num_aggregate='auto', 
                   stack_num_down=2, stack_num_up=1, activation='ReLU', output_activation='Sigmoid',
                   batch_norm=False, pool=True, unpool=True, deep_supervision=False, 
                   backbone=None, weights='imagenet', freeze_backbone=True, freeze_batch_norm=True, name='unet3plus')
@@ -324,9 +324,9 @@ def unet_3plus_2d(input_size, n_labels, filter_num_down, filter_num_skip='auto',
             
             pool_size = 2**(i)
             
-            X = Conv2D(n_labels, 3, padding='same', name='{}_output_conv_{}'.format(name, i-1))(X_decoder[i])
+            X = Conv2D(num_classes, 3, padding='same', name='{}_output_conv_{}'.format(name, i-1))(X_decoder[i])
             
-            X = decode_layer(X, n_labels, pool_size, unpool, 
+            X = decode_layer(X, num_classes, pool_size, unpool, 
                              activation=None, batch_norm=False, name='{}_output_sup{}'.format(name, i-1))
             
             if output_activation:
@@ -345,7 +345,7 @@ def unet_3plus_2d(input_size, n_labels, filter_num_down, filter_num_skip='auto',
                     
             OUT_stack.append(X)
         
-        X = CONV_output(X_decoder[0], n_labels, kernel_size=3, 
+        X = CONV_output(X_decoder[0], num_classes, kernel_size=3, 
                         activation=output_activation, name='{}_output_final'.format(name))
         OUT_stack.append(X)
         
@@ -357,7 +357,7 @@ def unet_3plus_2d(input_size, n_labels, filter_num_down, filter_num_skip='auto',
         model = Model([IN,], OUT_stack)
 
     else:
-        OUT = CONV_output(X_decoder[0], n_labels, kernel_size=3, 
+        OUT = CONV_output(X_decoder[0], num_classes, kernel_size=3, 
                           activation=output_activation, name='{}_output_final'.format(name))
 
         model = Model([IN,], [OUT,])

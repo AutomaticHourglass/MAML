@@ -178,7 +178,7 @@ def swin_unet_2d_base(input_tensor, filter_num_begin, depth, stack_num_down, sta
     return X
 
 
-def swin_unet_2d(input_size, filter_num_begin, n_labels, depth, stack_num_down, stack_num_up, 
+def swin_unet_2d(input_size, filter_num_begin, num_classes, depth, stack_num_down, stack_num_up, 
                       patch_size, num_heads, window_size, num_mlp, output_activation='Softmax', shift_window=True, name='swin_unet'):
     '''
     The base of SwinUNET.
@@ -192,7 +192,7 @@ def swin_unet_2d(input_size, filter_num_begin, n_labels, depth, stack_num_down, 
         input_size: the size/shape of network input, e.g., `(128, 128, 3)`.
         filter_num_begin: number of channels in the first downsampling block; 
                           it is also the number of embedded dimensions.
-        n_labels: number of output labels.
+        num_classes: number of output labels.
         depth: the depth of Swin-UNET, e.g., depth=4 means three down/upsampling levels and a bottom level.
         stack_num_down: number of convolutional layers per downsampling level/block. 
         stack_num_up: number of convolutional layers (after concatenation) per upsampling level/block.
@@ -231,7 +231,7 @@ def swin_unet_2d(input_size, filter_num_begin, n_labels, depth, stack_num_down, 
                           patch_size=patch_size, num_heads=num_heads, window_size=window_size, num_mlp=num_mlp, shift_window=True, name=name)
     
     # output layer
-    OUT = CONV_output(X, n_labels, kernel_size=1, activation=output_activation, name='{}_output'.format(name))
+    OUT = CONV_output(X, num_classes, kernel_size=1, activation=output_activation, name='{}_output'.format(name))
     
     # functional API model
     model = Model(inputs=[IN,], outputs=[OUT,], name='{}_model'.format(name))

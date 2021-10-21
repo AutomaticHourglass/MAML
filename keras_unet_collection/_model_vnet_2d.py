@@ -168,14 +168,14 @@ def vnet_2d_base(input_tensor, filter_num, res_num_ini=1, res_num_max=3,
     return X
 
 
-def vnet_2d(input_size, filter_num, n_labels,
+def vnet_2d(input_size, filter_num, num_classes,
             res_num_ini=1, res_num_max=3, 
             activation='ReLU', output_activation='Softmax', 
             batch_norm=False, pool=True, unpool=True, name='vnet'):
     '''
     vnet 2d
     
-    vnet_2d(input_size, filter_num, n_labels,
+    vnet_2d(input_size, filter_num, num_classes,
             res_num_ini=1, res_num_max=3, 
             activation='ReLU', output_activation='Softmax', 
             batch_norm=False, pool=True, unpool=True, name='vnet')
@@ -193,7 +193,7 @@ def vnet_2d(input_size, filter_num, n_labels,
         filter_num: a list that defines the number of filters for each \
                     down- and upsampling levels. e.g., `[64, 128, 256, 512]`.
                     The depth is expected as `len(filter_num)`.
-        n_labels: number of output labels.
+        num_classes: number of output labels.
         res_num_ini: number of convolutional layers of the first first residual block (before downsampling).
         res_num_max: the max number of convolutional layers within a residual block.
         activation: one of the `tensorflow.keras.layers` or `keras_unet_collection.activations` interfaces, e.g., 'ReLU'.
@@ -225,7 +225,7 @@ def vnet_2d(input_size, filter_num, n_labels,
     X = vnet_2d_base(X, filter_num, res_num_ini=res_num_ini, res_num_max= res_num_max, 
                      activation=activation, batch_norm=batch_norm, pool=pool, unpool=unpool, name=name)
     # output layer
-    OUT = CONV_output(X, n_labels, kernel_size=1, activation=output_activation, name='{}_output'.format(name))
+    OUT = CONV_output(X, num_classes, kernel_size=1, activation=output_activation, name='{}_output'.format(name))
     
     # functional API model
     model = Model(inputs=[IN,], outputs=[OUT,], name='{}_model'.format(name))

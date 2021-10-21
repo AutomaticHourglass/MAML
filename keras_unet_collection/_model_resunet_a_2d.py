@@ -191,13 +191,13 @@ def resunet_a_2d_base(input_tensor, filter_num, dilation_num,
     return X
 
 
-def resunet_a_2d(input_size, filter_num, dilation_num, n_labels,
+def resunet_a_2d(input_size, filter_num, dilation_num, num_classes,
                  aspp_num_down=256, aspp_num_up=128, activation='ReLU', output_activation='Softmax', 
                  batch_norm=True, pool=True, unpool=True, name='resunet'):
     '''
     ResUNet-a
     
-    resunet_a_2d(input_size, filter_num, dilation_num, n_labels,
+    resunet_a_2d(input_size, filter_num, dilation_num, num_classes,
                  aspp_num_down=256, aspp_num_up=128, activation='ReLU', output_activation='Softmax', 
                  batch_norm=True, pool=True, unpool=True, name='resunet')
                  
@@ -218,7 +218,7 @@ def resunet_a_2d(input_size, filter_num, dilation_num, n_labels,
                       `[[1, 3, 15, 31], [1, 3, 15], [1,], [1,]]`.
                       * If `dilation_num` is not provided per down-/upsampling level, then the automated
                       determinations will be applied.
-        n_labels: number of output labels.
+        num_classes: number of output labels.
         aspp_num_down: number of Atrous Spatial Pyramid Pooling (ASPP) layer filters after the last downsampling block.
         aspp_num_up: number of ASPP layer filters after the last upsampling block.  
         activation: one of the `tensorflow.keras.layers` or `keras_unet_collection.activations` interfaces, e.g., 'ReLU'.
@@ -280,7 +280,7 @@ def resunet_a_2d(input_size, filter_num, dilation_num, n_labels,
                           aspp_num_down=aspp_num_down, aspp_num_up=aspp_num_up, activation=activation,
                           batch_norm=batch_norm, pool=pool, unpool=unpool, name=name)
     
-    OUT = CONV_output(X, n_labels, kernel_size=1, activation=output_activation, name='{}_output'.format(name))
+    OUT = CONV_output(X, num_classes, kernel_size=1, activation=output_activation, name='{}_output'.format(name))
 
     model = Model([IN], [OUT,], name='{}_model'.format(name))
     

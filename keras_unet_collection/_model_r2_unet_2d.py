@@ -215,7 +215,7 @@ def r2_unet_2d_base(input_tensor, filter_num, stack_num_down=2, stack_num_up=2, 
     return X
 
 
-def r2_unet_2d(input_size, filter_num, n_labels, 
+def r2_unet_2d(input_size, filter_num, num_classes, 
                stack_num_down=2, stack_num_up=2, recur_num=2,
                activation='ReLU', output_activation='Softmax', 
                batch_norm=False, pool=True, unpool=True, name='r2_unet'):
@@ -223,7 +223,7 @@ def r2_unet_2d(input_size, filter_num, n_labels,
     '''
     Recurrent Residual (R2) U-Net
     
-    r2_unet_2d(input_size, filter_num, n_labels, 
+    r2_unet_2d(input_size, filter_num, num_classes, 
                stack_num_down=2, stack_num_up=2, recur_num=2,
                activation='ReLU', output_activation='Softmax', 
                batch_norm=False, pool=True, unpool=True, name='r2_unet')
@@ -238,7 +238,7 @@ def r2_unet_2d(input_size, filter_num, n_labels,
         filter_num: a list that defines the number of filters for each \
                     down- and upsampling levels. e.g., `[64, 128, 256, 512]`.
                     The depth is expected as `len(filter_num)`.
-        n_labels: number of output labels.
+        num_classes: number of output labels.
         stack_num_down: number of stacked recurrent convolutional layers per downsampling level/block.
         stack_num_down: number of stacked recurrent convolutional layers per upsampling level/block.
         recur_num: number of recurrent iterations.
@@ -270,7 +270,7 @@ def r2_unet_2d(input_size, filter_num, n_labels,
                         stack_num_down=stack_num_down, stack_num_up=stack_num_up, recur_num=recur_num,
                         activation=activation, batch_norm=batch_norm, pool=pool, unpool=unpool, name=name)
     # output layer
-    OUT = CONV_output(X, n_labels, kernel_size=1, activation=output_activation, name='{}_output'.format(name))
+    OUT = CONV_output(X, num_classes, kernel_size=1, activation=output_activation, name='{}_output'.format(name))
     
     # functional API model
     model = Model(inputs=[IN], outputs=[OUT], name='{}_model'.format(name))

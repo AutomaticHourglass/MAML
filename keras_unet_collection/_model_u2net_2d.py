@@ -284,14 +284,14 @@ def u2net_2d_base(input_tensor,
     return X_out
 
 
-def u2net_2d(input_size, n_labels, filter_num_down, filter_num_up='auto', filter_mid_num_down='auto', filter_mid_num_up='auto', 
+def u2net_2d(input_size, num_classes, filter_num_down, filter_num_up='auto', filter_mid_num_down='auto', filter_mid_num_up='auto', 
              filter_4f_num='auto', filter_4f_mid_num='auto', activation='ReLU', output_activation='Sigmoid', 
              batch_norm=False, pool=True, unpool=True, deep_supervision=False, name='u2net'):
     
     '''
     U^2-Net
     
-    u2net_2d(input_size, n_labels, filter_num_down, filter_num_up='auto', filter_mid_num_down='auto', filter_mid_num_up='auto', 
+    u2net_2d(input_size, num_classes, filter_num_down, filter_num_up='auto', filter_mid_num_down='auto', filter_mid_num_up='auto', 
              filter_4f_num='auto', filter_4f_mid_num='auto', activation='ReLU', output_activation='Sigmoid', 
              batch_norm=False, deep_supervision=False, name='u2net')
     
@@ -398,7 +398,7 @@ def u2net_2d(input_size, n_labels, filter_num_down, filter_num_up='auto', filter
     X_out = X_out[::-1]
     L_out = len(X_out)
     
-    X = CONV_output(X_out[0], n_labels, kernel_size=3, activation=output_activation, 
+    X = CONV_output(X_out[0], num_classes, kernel_size=3, activation=output_activation, 
                     name='{}_output_sup0'.format(name))
     OUT_stack.append(X)
     
@@ -406,9 +406,9 @@ def u2net_2d(input_size, n_labels, filter_num_down, filter_num_up='auto', filter
         
         pool_size = 2**(i)
         
-        X = Conv2D(n_labels, 3, padding='same', name='{}_output_conv_{}'.format(name, i))(X_out[i])
+        X = Conv2D(num_classes, 3, padding='same', name='{}_output_conv_{}'.format(name, i))(X_out[i])
         
-        X = decode_layer(X, n_labels, pool_size, unpool, 
+        X = decode_layer(X, num_classes, pool_size, unpool, 
                          activation=None, batch_norm=False, name='{}_sup{}'.format(name, i))
         
         if output_activation:
@@ -422,7 +422,7 @@ def u2net_2d(input_size, n_labels, filter_num_down, filter_num_up='auto', filter
         
     D = concatenate(OUT_stack, axis=-1, name='{}_output_concat'.format(name))
     
-    D = CONV_output(D, n_labels, kernel_size=1, activation=output_activation, 
+    D = CONV_output(D, num_classes, kernel_size=1, activation=output_activation, 
                     name='{}_output_final'.format(name))
     
     if deep_supervision:
