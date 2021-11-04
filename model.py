@@ -110,8 +110,6 @@ class SSegModel:
             loss = tf.keras.losses.CategoricalCrossentropy()
         elif self.train_params['loss'] == 'crps2d_tf':
             loss = crps2d_tf
-        elif self.train_params['loss'] == 'crps2d_np':
-            loss = crps2d_np
         elif self.train_params['loss'] == 'dice_coef':
             loss = dice_coef
         elif self.train_params['loss'] == 'dice':
