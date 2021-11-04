@@ -75,8 +75,9 @@ class SSegModel:
         self.adam = tensorflow.keras.optimizers.Adam(learning_rate=self.train_params['learning_rate'])
         
         self.callbacks = []
-        self.callbacks += [tensorflow.keras.callbacks.EarlyStopping(monitor='val_loss',
-            patience=self.train_params['callback_params']['patience'],restore_best_weights=True)]
+        self.callbacks += [tensorflow.keras.callbacks.EarlyStopping(monitor='val_categorical_accuracy',mode='max',
+            min_delta=0.001,patience=self.train_params['callback_params']['patience'],
+            restore_best_weights=True)]
         
         # lr_exp < 1: expoential decay
         # lr_exp >=1: stepwise decay at every 
