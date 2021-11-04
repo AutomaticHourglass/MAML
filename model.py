@@ -107,7 +107,7 @@ class SSegModel:
         lr_metric = get_lr_metric(self.adam)
 
         if self.train_params['loss'] == 'cce':
-            loss = tf.keras.losses.CategoricalCrossentropy
+            loss = tf.keras.losses.CategoricalCrossentropy()
         elif self.train_params['loss'] == 'crps2d_tf':
             loss = crps2d_tf
         elif self.train_params['loss'] == 'crps2d_np':
