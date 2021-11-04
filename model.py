@@ -108,27 +108,27 @@ class SSegModel:
 
         if self.train_params['loss'] == 'cce':
             loss = tf.keras.losses.CategoricalCrossentropy()
-        elif self.train_params['loss'] == 'crps2d_tf':
+        elif self.train_params['loss'] == 'crps2d':
             loss = crps2d_tf
-        elif self.train_params['loss'] == 'dice_coef':
+        elif self.train_params['loss'] == 'dice-c':
             loss = dice_coef
         elif self.train_params['loss'] == 'dice':
             loss = dice
-        elif self.train_params['loss'] == 'tversky_coef':
+        elif self.train_params['loss'] == 'tversky-c':
             loss = tversky_coef
         elif self.train_params['loss'] == 'tversky':
             loss = tversky
-        elif self.train_params['loss'] == 'focal_tversky':
+        elif self.train_params['loss'] == 'focal-t':
             loss = focal_tversky
-        elif self.train_params['loss'] == 'ms_ssim':
+        elif self.train_params['loss'] == 'ms-ssim':
             loss = ms_ssim
-        elif self.train_params['loss'] == 'iou_box_coef':
+        elif self.train_params['loss'] == 'iou-box-c':
             loss = iou_box_coef
-        elif self.train_params['loss'] == 'iou_box':
+        elif self.train_params['loss'] == 'iou-box':
             loss = iou_box
-        elif self.train_params['loss'] == 'iou_seg':
+        elif self.train_params['loss'] == 'iou-seg':
             loss = iou_seg
-        elif self.train_params['loss'] == 'triplet_1d':
+        elif self.train_params['loss'] == 'triplet':
             loss = triplet_1d
 
 
