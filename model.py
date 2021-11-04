@@ -103,7 +103,7 @@ class SSegModel:
             return lr
         lr_metric = get_lr_metric(self.adam)
 
-        self.model.compile(optimizer=self.adam,loss=dice(),metrics = ['categorical_accuracy',lr_metric])
+        self.model.compile(optimizer=self.adam,loss=dice,metrics = ['categorical_accuracy',lr_metric])
         self.model_history = self.model.fit(tr_data,tr_label_cat,epochs=self.train_params['epochs'],
             batch_size=self.train_params['batch_size'],use_multiprocessing=True,workers=8,
             validation_data=(ts_data,ts_label_cat),verbose=1,
