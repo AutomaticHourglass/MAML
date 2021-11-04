@@ -35,6 +35,9 @@ class SSegModel:
         self.model_params = model_params
         self.train_params = train_params
 
+        if 'loss' not in self.train_params:
+            self.train_params['loss'] = 'cce'
+
         if(model_name == 'unet_2'):
             self.model = custom_unet(**model_params)
         elif(model_name == 'segnet'):
@@ -103,7 +106,35 @@ class SSegModel:
             return lr
         lr_metric = get_lr_metric(self.adam)
 
-        self.model.compile(optimizer=self.adam,loss=dice,metrics = ['categorical_accuracy',lr_metric])
+        if self.train_params['loss'] == 'cce':
+            loss = tf.keras.losses.CategoricalCrossentropy
+        elif self.train_params['loss'] == 'crps2d_tf':
+            loss = crps2d_tf
+        elif self.train_params['loss'] == 'crps2d_np':
+            loss = crps2d_np
+        elif self.train_params['loss'] == 'dice_coef':
+            loss = dice_coef
+        elif self.train_params['loss'] == 'dice':
+            loss = dice
+        elif self.train_params['loss'] == 'tversky_coef':
+            loss = tversky_coef
+        elif self.train_params['loss'] == 'tversky':
+            loss = tversky
+        elif self.train_params['loss'] == 'focal_tversky':
+            loss = focal_tversky
+        elif self.train_params['loss'] == 'ms_ssim':
+            loss = ms_ssim
+        elif self.train_params['loss'] == 'iou_box_coef':
+            loss = iou_box_coef
+        elif self.train_params['loss'] == 'iou_box':
+            loss = iou_box
+        elif self.train_params['loss'] == 'iou_seg':
+            loss = iou_seg
+        elif self.train_params['loss'] == 'triplet_1d':
+            loss = triplet_1d
+
+
+        self.model.compile(optimizer=self.adam,loss=loss,metrics = ['categorical_accuracy',lr_metric])
         self.model_history = self.model.fit(tr_data,tr_label_cat,epochs=self.train_params['epochs'],
             batch_size=self.train_params['batch_size'],use_multiprocessing=True,workers=8,
             validation_data=(ts_data,ts_label_cat),verbose=1,
@@ -133,7 +164,7 @@ class SSegModel:
 
     def save_model(self):
         now = datetime.now().strftime('%Y%m%d-%H%M%S')
-        folder_name = f'{self.dataset_name}-{self.model_name}-{now}-{int(self.acc*1e4)}'
+        folder_name = f'{self.dataset_name}-{self.model_name}-{self.train_params["loss"]}-{now}-{int(self.acc*1e4)}'
         print(f'Moving files to {folder_name}')
         shutil.move('results',folder_name)
         return folder_name
