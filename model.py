@@ -115,23 +115,12 @@ class SSegModel:
             loss = dice_coef
         elif self.train_params['loss'] == 'dice':
             loss = dice
-        elif self.train_params['loss'] == 'tversky-c':
-            loss = tversky_coef
         elif self.train_params['loss'] == 'tversky':
             loss = tversky
         elif self.train_params['loss'] == 'focal-t':
             loss = focal_tversky
-        elif self.train_params['loss'] == 'ms-ssim':
-            loss = ms_ssim
-        elif self.train_params['loss'] == 'iou-box-c':
-            loss = iou_box_coef
-        elif self.train_params['loss'] == 'iou-box':
-            loss = iou_box
         elif self.train_params['loss'] == 'iou-seg':
             loss = iou_seg
-        elif self.train_params['loss'] == 'triplet':
-            loss = triplet_1d
-
 
         self.model.compile(optimizer=self.adam,loss=loss,metrics = ['categorical_accuracy',lr_metric])
         self.model_history = self.model.fit(tr_data,tr_label_cat,epochs=self.train_params['epochs'],
