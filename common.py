@@ -5,31 +5,6 @@ from tqdm import tqdm
 import rasterio
 import matplotlib.pyplot as plt
 import tensorflow as tf
-from tensorflow.keras.backend.tensorflow_backend import set_session
-from tensorflow.keras.backend.tensorflow_backend import clear_session
-from tensorflow.keras.backend.tensorflow_backend import get_session
-import gc
-
-# Reset Keras Session
-def reset_keras():
-    sess = get_session()
-    clear_session()
-    sess.close()
-    sess = get_session()
-
-    # try:
-    #     del model # this is from global space - change this as you need
-    # except:
-    #     pass
-
-    print(gc.collect()) # if it's done something you should see a number being outputted
-
-    # use the same config as you used to create the session
-    config = tf.ConfigProto()
-    config.gpu_options.per_process_gpu_memory_fraction = 1
-    config.gpu_options.visible_device_list = "0"
-    set_session(tf.Session(config=config))
-
 
 def extract_subimages(img0,img1,img_size_x = 512,img_size_y = 512,gap = 256,zero_ratio = 0.5):
     cx,cy = np.meshgrid(range(0,img0.shape[0]-img_size_x,gap),range(0,img0.shape[1]-img_size_y,gap))
