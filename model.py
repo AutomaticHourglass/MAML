@@ -206,7 +206,7 @@ class SSegModel:
             with redirect_stdout(f):
                 self.model.summary()
 
-        print(cb.logs)
+        dill.dump(cb.logs,open('results/train_times.pkl','wb'))
 
     def save_model(self):
         now = datetime.now().strftime('%Y%m%d-%H%M%S')
