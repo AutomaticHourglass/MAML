@@ -16,6 +16,7 @@ import json
 from .keras_unet_collection.models import *
 from .keras_unet_collection.losses import *
 from matplotlib.colors import ListedColormap, LinearSegmentedColormap
+from contextlib import redirect_stdout
 
 # from ._model_unet_2d import unet_2d
 # from ._model_vnet_2d import vnet_2d
@@ -189,6 +190,10 @@ class SSegModel:
         self.metrics = calculate_metrics(ts_label,self.pred_cl)
         print(self.metrics)
         dill.dump(self.metrics,open('results/metrics.pkl','wb'))
+
+        with open('results/model_summary.txt', 'w') as f:
+            with redirect_stdout(f):
+                self.model.summary()
 
     def save_model(self):
         now = datetime.now().strftime('%Y%m%d-%H%M%S')
