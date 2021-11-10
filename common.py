@@ -5,6 +5,15 @@ from tqdm import tqdm
 import rasterio
 import matplotlib.pyplot as plt
 import tensorflow as tf
+from sklearn.metrics import cohen_kappa_score
+from sklearn.metrics import precision_recall_fscore_support
+
+def calculate_metrics(true_label,pred_label):
+    accuracy = np.mean(true_label == pred_label)
+    precision,recall,f1_score,_ = precision_recall_fscore_support(true_label,pred_label,average='weighted')
+    kappa = cohen_kappa_score(true_label,pred_label)
+
+    return accuracy,precision,recall,f1_score,kappa
 
 def extract_subimages(img0,img1,img_size_x = 512,img_size_y = 512,gap = 256,zero_ratio = 0.5):
     cx,cy = np.meshgrid(range(0,img0.shape[0]-img_size_x,gap),range(0,img0.shape[1]-img_size_y,gap))
