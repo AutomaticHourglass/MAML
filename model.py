@@ -183,6 +183,9 @@ class SSegModel:
         dill.dump(self,gzip.open(f'results/model_{self.model_name}.pkl.gz','wb'))
         dill.dump(self.model_history.history,open('results/model_history.pkl','wb'))
 
+        self.metrics = calculate_metrics(ts_label,self.pred_cl)
+        dill.dump(self.metrics,open('results/metrics.pkl','wb'))
+
     def save_model(self):
         now = datetime.now().strftime('%Y%m%d-%H%M%S')
         folder_name = f'{self.dataset_name}-{self.model_name}-{self.train_params["loss"]}-{now}-{int(self.acc*1e4)}'
