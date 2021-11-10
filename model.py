@@ -15,6 +15,7 @@ from datetime import datetime
 import json
 from .keras_unet_collection.models import *
 from .keras_unet_collection.losses import *
+from matplotlib.colors import ListedColormap, LinearSegmentedColormap
 
 # from ._model_unet_2d import unet_2d
 # from ._model_vnet_2d import vnet_2d
@@ -143,12 +144,44 @@ class SSegModel:
         self.acc = np.mean(ts_label == self.pred_cl)
         print(f'{self.model_name} accuracy: {self.acc}')
 
+        cmap_article = ListedColormap([
+            [0.008, 0, 0, 1],
+            [0.921, 0.822, 0.729, 1], #Agriculture
+            [0.2, 0.592, 0.2, 1],     #Forest
+            [0.896, 0.312, 0, 1],     #Built-up
+            [0.1, 0.6, 0.93, 1]])  #Water
+
+        # cmap_article = ListedColormap([
+        #     [0.008, 0, 0, 1],
+        #     [0.871, 0.722, 0.529, 1],
+        #     [0, 0.392, 0, 1],
+        #     [0.796, 0.012, 0, 1],
+        #     [0.004, 0, 0.392, 1]])
+
+        cmap_article_s = LinearSegmentedColormap.from_list("",[
+            [0.008, 0, 0, 1],
+            [0.871, 0.722, 0.529, 1],
+            [0, 0.392, 0, 1],
+            [0.796, 0.012, 0, 1],
+            [0.004, 0, 0.392, 1]])
+
+        cmap_me = ListedColormap([
+            [0.008, 0, 0, 1],
+            [0.871, 0.722, 0.529, 1],
+            [0.13, 0.55, 0.13, 1],
+            [0.4, 0.4, 0.4, 1],
+            [0.09, 0.45, 0.80, 1]])
+
         pred_img = reconstruct_image(self.pred_cl,ts_coords,self.model_params['input_size'][0])
-        plt.imshow(pred_img[::5,::5],)
-        plt.imsave(f'results/label_ts_{self.model_name}.png',pred_img,vmin=0,vmax=self.model_params['num_classes'])
+
+        plt.figure(figsize=(16,8))
+        plt.imshow(pred_img[::5,::5],cmap=cmap_article)
+        plt.imsave(f'results/label_ts_{self.model_name}_cmap_art.png',pred_img,vmin=0,vmax=self.model_params['num_classes'],cmap=cmap_article)
+        plt.imsave(f'results/label_ts_{self.model_name}_cmap_me.png',pred_img,vmin=0,vmax=self.model_params['num_classes'],cmap=cmap_me)
         plt.show()
 
         dill.dump(self,gzip.open(f'results/model_{self.model_name}.pkl.gz','wb'))
+        dill.dump(self.model_history.history,open('results/model_history.pkl','wb'))
 
     def save_model(self):
         now = datetime.now().strftime('%Y%m%d-%H%M%S')
