@@ -17,6 +17,7 @@ from .keras_unet_collection.models import *
 from .keras_unet_collection.losses import *
 from matplotlib.colors import ListedColormap, LinearSegmentedColormap
 from contextlib import redirect_stdout
+from timeit import default_timer as timer
 
 # from ._model_unet_2d import unet_2d
 # from ._model_vnet_2d import vnet_2d
@@ -29,6 +30,15 @@ from contextlib import redirect_stdout
 # from ._model_transunet_2d import transunet_2d
 # from ._model_swin_unet_2d import swin_unet_2d
 
+class TimingCallback(tensorflow.keras.callbacks.Callback):
+    def __init__(self, logs={}):
+        self.logs=[]
+    def on_epoch_begin(self, epoch, logs={}):
+        self.starttime = timer()
+    def on_epoch_end(self, epoch, logs={}):
+        self.logs.append(timer()-self.starttime)
+
+cb = TimingCallback()
 
 class SSegModel:
     def __init__(self,dataset_name,model_name,model_params,train_params):
@@ -96,6 +106,7 @@ class SSegModel:
                     return lr
 
         self.callbacks += [tensorflow.keras.callbacks.LearningRateScheduler(scheduler)]
+        self.callbacks += [cb]
 
     def train(self,tr_data,tr_label,tr_coords,ts_data,ts_label,ts_coords,num_classes):
         self.create_callbacks()
@@ -194,6 +205,8 @@ class SSegModel:
         with open('results/model_summary.txt', 'w') as f:
             with redirect_stdout(f):
                 self.model.summary()
+
+        print(cb.logs)
 
     def save_model(self):
         now = datetime.now().strftime('%Y%m%d-%H%M%S')
