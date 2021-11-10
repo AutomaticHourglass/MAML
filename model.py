@@ -152,8 +152,9 @@ class SSegModel:
         plt.show()
 
         pred_ts = self.model.predict(ts_data)
-        plt.imsave(f'results/prob1_ts_{self.model_name}.png',pred_ts[:,:,:3],vmin=0,vmax=1)
-        plt.imsave(f'results/prob2_ts_{self.model_name}.png',pred_ts[:,:,3:],vmin=0,vmax=1)
+        pred_ts_prob = np.stack([reconstruct_image(pred_ts[:,:,:,i],ts_coords,256) for i in range(self.num_classes)],axis=2)
+        plt.imsave(f'results/prob1_ts_{self.model_name}.png',pred_ts_prob[:,:,:3],vmin=0,vmax=1)
+        plt.imsave(f'results/prob2_ts_{self.model_name}.png',pred_ts_prob[:,:,3:],vmin=0,vmax=1)
 
         self.pred_cl = np.argmax(pred_ts,axis=3).astype(np.int8)
         self.acc = np.mean(ts_label == self.pred_cl)
