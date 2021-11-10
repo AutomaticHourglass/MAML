@@ -187,7 +187,7 @@ class SSegModel:
         dill.dump(self,gzip.open(f'results/model_{self.model_name}.pkl.gz','wb'))
         dill.dump(self.model_history.history,open('results/model_history.pkl','wb'))
 
-        self.metrics = calculate_metrics(ts_label,self.pred_cl)
+        self.metrics = calculate_metrics(ts_label.flatten()[::10],self.pred_cl.flatten()[::10])
         print(self.metrics)
         dill.dump(self.metrics,open('results/metrics.pkl','wb'))
 
