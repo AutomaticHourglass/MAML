@@ -220,5 +220,5 @@ class SSegModel:
         now = datetime.now().strftime('%Y%m%d-%H%M%S')
         folder_name = f'{self.dataset_name}-{self.model_name}-{self.train_params["loss"]}-{now}-{int(self.acc*1e4)}'
         print(f'Moving files to {folder_name}')
-        shutil.move('results','/content/drive/MyDrive/'+folder_name)
+        shutil.move('results','/content/drive/MyDrive/runs/'+folder_name)
         return folder_name
