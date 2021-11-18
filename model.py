@@ -215,3 +215,10 @@ class SSegModel:
         print(f'Moving files to {folder_name}')
         shutil.move('results',folder_name)
         return folder_name
+
+    def save_model_colab(self):
+        now = datetime.now().strftime('%Y%m%d-%H%M%S')
+        folder_name = f'{self.dataset_name}-{self.model_name}-{self.train_params["loss"]}-{now}-{int(self.acc*1e4)}'
+        print(f'Moving files to {folder_name}')
+        shutil.move('results','/content/gdrive/MyDrive/'+folder_name)
+        return folder_name
