@@ -200,7 +200,8 @@ class SSegModel:
         dill.dump(self.model_history.history,open('results/model_history.pkl','wb'))
 
         self.metrics = calculate_metrics(ts_label.flatten()[::10],self.pred_cl.flatten()[::10])
-        print(self.metrics)
+        print(self.metrics[:-1])
+        print(self.metrics[-1])
         dill.dump(self.metrics,open('results/metrics.pkl','wb'))
 
         with open('results/model_summary.txt', 'w') as f:
