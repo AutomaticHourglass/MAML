@@ -209,8 +209,8 @@ class SSegModel:
                 self.model.summary()
 
         dill.dump(cb.logs,open('results/train_times.pkl','wb'))
-        dill.dump(self.train_params,open('results/train_params.pkl'))
-        dill.dump(self.model_params,open('results/model_params.pkl'))
+        dill.dump(self.train_params,open('results/train_params.pkl','wb'))
+        dill.dump(self.model_params,open('results/model_params.pkl','wb'))
 
 
     def save_model(self):
