@@ -196,7 +196,7 @@ class SSegModel:
         plt.imsave(f'results/label_ts_{self.model_name}_cmap_me.png',pred_img,vmin=0,vmax=self.model_params['num_classes'],cmap=cmap_me)
         plt.show()
 
-        dill.dump(self,gzip.open(f'results/model_{self.model_name}.pkl.gz','wb'))
+        # dill.dump(self,gzip.open(f'results/model_{self.model_name}.pkl.gz','wb'))
         dill.dump(self.model_history.history,open('results/model_history.pkl','wb'))
 
         self.metrics = calculate_metrics(ts_label.flatten()[::10],self.pred_cl.flatten()[::10])
