@@ -209,6 +209,9 @@ class SSegModel:
                 self.model.summary()
 
         dill.dump(cb.logs,open('results/train_times.pkl','wb'))
+        dill.dump(self.train_params,open('results/train_params.pkl'))
+        dill.dump(self.model_params,open('results/model_params.pkl'))
+
 
     def save_model(self):
         now = datetime.now().strftime('%Y%m%d-%H%M%S')
