@@ -223,7 +223,7 @@ class SSegModel:
     def save_model_colab(self):
         now = datetime.now().strftime('%Y%m%d-%H%M')
 
-        folder_name = f'{now}-{self.dataset_name}-{self.train_params["learning_rate"]:e}-{self.train_params["callback_params"]["lr_exp"]}-{self.train_params["loss"]}-{self.model_name}-{int(self.acc*1e4)}'
+        folder_name = f'{now}-{self.dataset_name}-{self.train_params["learning_rate"]:.0e}-{self.train_params["callback_params"]["lr_exp"]}-{self.train_params["loss"]}-{self.model_name}-{int(self.acc*1e4)}'
         print(f'Moving files to {folder_name}')
         shutil.move('results','/content/drive/MyDrive/runs/'+folder_name)
         return folder_name
