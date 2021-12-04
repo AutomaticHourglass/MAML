@@ -64,7 +64,7 @@ class SSegModel:
             self.model = unet_plus_2d(**model_params)
         elif(model_name == 'r2_unet'):
             self.model = r2_unet_2d(**model_params)
-        elif(model_name == 'att_unet'):
+        elif(model_name == 'attunet'):
             self.model = att_unet_2d(**model_params)
         elif(model_name == 'resunet'):
             self.model = resunet_a_2d(**model_params)
