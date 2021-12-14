@@ -90,6 +90,7 @@ class SSegModel:
         self.callbacks += [tensorflow.keras.callbacks.EarlyStopping(monitor='val_categorical_accuracy',mode='max',
             min_delta=0.001,patience=self.train_params['callback_params']['patience'],
             restore_best_weights=True)]
+        self.callbacks += [tensorflow.keras.callbacks.ModelCheckpoint(filepath='model.{epoch:02d}-{val_loss:.2f}.h5'),]
         
         # lr_exp < 1: expoential decay
         # lr_exp >=1: stepwise decay at every 
