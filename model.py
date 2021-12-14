@@ -86,13 +86,10 @@ class SSegModel:
     def create_callbacks(self):
         self.adam = tensorflow.keras.optimizers.Adam(learning_rate=self.train_params['learning_rate'])
         
-        name_seed = np.random.randint(0,16,12)
-        model_name = ''.join([str(hex(i))[2] for i in name_seed])
         self.callbacks = []
         self.callbacks += [tensorflow.keras.callbacks.EarlyStopping(monitor='val_categorical_accuracy',mode='max',
             min_delta=0.001,patience=self.train_params['callback_params']['patience'],
             restore_best_weights=True)]
-        self.callbacks += [tensorflow.keras.callbacks.ModelCheckpoint(filepath=f'model_name_{epoch:02d}_{val_loss:.2f}.h5')]
         
         # lr_exp < 1: expoential decay
         # lr_exp >=1: stepwise decay at every 
