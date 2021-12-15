@@ -84,6 +84,9 @@ class SSegModel:
         os.mkdir('results')
 
     def create_callbacks(self):
+        name_seed = np.random.randint(0,16,12)
+        model_hash = ''.join([str(hex(i))[2] for i in name_seed])
+
         self.adam = tensorflow.keras.optimizers.Adam(learning_rate=self.train_params['learning_rate'])
         
         self.callbacks = []
@@ -107,6 +110,16 @@ class SSegModel:
 
         self.callbacks += [tensorflow.keras.callbacks.LearningRateScheduler(scheduler)]
         self.callbacks += [cb]
+        self.callbacks += [tensorflow.keras.callbacks.ModelCheckpoint(
+                            model_hash,
+                            monitor=['val_loss','val_accuracy'],
+                            verbose=0,
+                            save_best_only=False,
+                            save_weights_only=False,
+                            mode="auto",
+                            save_freq="epoch",
+                            options=None,
+                            **kwargs)]
 
     def train(self,tr_data,tr_label,tr_coords,ts_data,ts_label,ts_coords,num_classes):
         self.create_callbacks()
