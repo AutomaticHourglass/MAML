@@ -118,8 +118,7 @@ class SSegModel:
                             save_weights_only=False,
                             mode="auto",
                             save_freq="epoch",
-                            options=None,
-                            **kwargs)]
+                            options=None)]
 
     def train(self,tr_data,tr_label,tr_coords,ts_data,ts_label,ts_coords,num_classes):
         self.create_callbacks()
