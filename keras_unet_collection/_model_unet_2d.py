@@ -368,10 +368,11 @@ def unet_2d_crf(input_size, filter_num, num_classes, stack_num_down=2, stack_num
                      backbone=backbone, weights=weights, freeze_backbone=freeze_backbone, 
                      freeze_batch_norm=freeze_backbone, name=name)
     # output layer
-    X = CONV_output(X, num_classes, kernel_size=1, activation=output_activation, name='{}_output'.format(name))
-    OUT = CRF(False)(X)
+    OUT = CONV_output(X, num_classes, kernel_size=1, activation=output_activation, name='{}_output'.format(name))
 
     # functional API model
     model = Model(inputs=[IN,], outputs=[OUT,], name='{}_model'.format(name))
     
-    return model
+    crf_model = CRFModel(model,num_classes)
+
+    return crf_model
