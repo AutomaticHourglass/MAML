@@ -374,7 +374,7 @@ def unet_2d_crf(input_size, filter_num, num_classes, stack_num_down=2, stack_num
     # output layer
     OUT = CONV_output(X, num_classes, kernel_size=1, activation=output_activation, name='{}_output'.format(name))
 
-    crf_layer = tfa.layers.CRF(units = num_classes,
+    crf_layer = tfa.layers.CRF(units = 5,
                                 chain_initializer="orthogonal",
                                 use_boundary = True,
                                 boundary_initializer="zeros",
