@@ -59,7 +59,7 @@ class SSegModel:
         elif(model_name == 'unet'):
             self.model = unet_2d(**model_params)
         elif(model_name == 'unet_crf'):
-            self.model = unet_unet_2d_crf(**model_params)
+            self.model = unet_2d_crf(**model_params)
         elif(model_name == 'vnet'):
             self.model = vnet_2d(**model_params)
         elif(model_name == 'unet_plus'):
