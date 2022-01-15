@@ -5,6 +5,7 @@ from tensorflow.keras.applications import *
 from tensorflow.keras.models import Model
 
 from .utils import freeze_model
+from crf import CRF
 
 import warnings
 
