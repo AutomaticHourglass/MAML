@@ -300,7 +300,7 @@ def unet_2d(input_size, filter_num, num_classes, stack_num_down=2, stack_num_up=
 
 def unet_2d_crf(input_size, filter_num, num_classes, stack_num_down=2, stack_num_up=2,
             activation='ReLU', output_activation='Softmax', batch_norm=False, pool=True, unpool=True, 
-            backbone=None, weights='imagenet', freeze_backbone=True, freeze_batch_norm=True, name='unet'):
+            backbone=None, weights='imagenet', freeze_backbone=True, freeze_batch_norm=True, name='unet_crf'):
     '''
     U-net with an optional ImageNet-trained bakcbone. with CRF addition
     
