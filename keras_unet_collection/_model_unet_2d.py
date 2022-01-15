@@ -10,6 +10,8 @@ from ._backbone_zoo import backbone_zoo, bach_norm_checker
 from tensorflow.keras.layers import Input
 from tensorflow.keras.models import Model
 
+import tensorflow.addons as tfa
+
 def UNET_left(X, channel, kernel_size=3, stack_num=2, activation='ReLU', 
               pool=True, batch_norm=False, name='left0'):
     '''
@@ -367,12 +369,20 @@ def unet_2d_crf(input_size, filter_num, num_classes, stack_num_down=2, stack_num
                      activation=activation, batch_norm=batch_norm, pool=pool, unpool=unpool, 
                      backbone=backbone, weights=weights, freeze_backbone=freeze_backbone, 
                      freeze_batch_norm=freeze_backbone, name=name)
+    
+    
+    crf_layer = tfa.layers.CRF(units =4,
+                                chain_initializer="orthogonal",
+                                use_boundary = True,
+                                boundary_initializer="zeros",
+                                use_kernel = True)(X)
+
     # output layer
     OUT = CONV_output(X, num_classes, kernel_size=1, activation=output_activation, name='{}_output'.format(name))
 
     # functional API model
     model = Model(inputs=[IN,], outputs=[OUT,], name='{}_model'.format(name))
     
-    crf_model = CRFModel(model,num_classes)
+    # crf_model = CRFModel(model,num_classes)
 
     return crf_model
