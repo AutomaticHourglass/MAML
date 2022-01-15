@@ -370,7 +370,8 @@ def unet_2d_crf(input_size, filter_num, num_classes, stack_num_down=2, stack_num
                      backbone=backbone, weights=weights, freeze_backbone=freeze_backbone, 
                      freeze_batch_norm=freeze_backbone, name=name)
     
-    X = CRF(False)(X)
+    C = concatenate([IN,X],axis=-1)
+    X = CRF(False)(C)
     # output layer
     OUT = CONV_output(X, num_classes, kernel_size=1, activation=output_activation, name='{}_output'.format(name))
 
