@@ -378,8 +378,7 @@ def unet_2d_crf(input_size, filter_num, num_classes, stack_num_down=2, stack_num
                                 chain_initializer="orthogonal",
                                 use_boundary = True,
                                 boundary_initializer="zeros",
-                                use_kernel = True,
-                                input_spec = (256,256,5))(OUT)
+                                use_kernel = True)(OUT)
 
 
     # functional API model
