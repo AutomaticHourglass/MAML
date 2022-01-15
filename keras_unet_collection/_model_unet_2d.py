@@ -1,7 +1,7 @@
 
 from __future__ import absolute_import
 
-from crf import CRF
+from .crf import CRF
 
 from .layer_utils import *
 from .activations import GELU, Snake
