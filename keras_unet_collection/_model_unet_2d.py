@@ -385,4 +385,4 @@ def unet_2d_crf(input_size, filter_num, num_classes, stack_num_down=2, stack_num
     
     # crf_model = CRFModel(model,num_classes)
 
-    return crf_model
+    return model
