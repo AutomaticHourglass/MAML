@@ -1,7 +1,7 @@
 
 from __future__ import absolute_import
 
-from .crf import CRF
+from .crf import CRF, CRFModel
 
 from .layer_utils import *
 from .activations import GELU, Snake
@@ -369,7 +369,7 @@ def unet_2d_crf(input_size, filter_num, num_classes, stack_num_down=2, stack_num
                      freeze_batch_norm=freeze_backbone, name=name)
     # output layer
     X = CONV_output(X, num_classes, kernel_size=1, activation=output_activation, name='{}_output'.format(name))
-    OUT = CRF()(X)
+    OUT = CRF(False)(X)
 
     # functional API model
     model = Model(inputs=[IN,], outputs=[OUT,], name='{}_model'.format(name))
