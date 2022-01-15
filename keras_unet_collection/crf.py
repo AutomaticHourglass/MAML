@@ -19,7 +19,7 @@ class CRF(Layer):
         self.num_labels = input_shape[-1] - self.ignore_last_label
         self.trans = self.add_weight(name='crf_trans',
                                      shape=(self.num_labels, self.num_labels),
-                                     initializer='glorot_uniform',
+                                     initializer='uniform',
                                      trainable=True)
 
     def log_norm_step(self, inputs, states):
