@@ -189,7 +189,7 @@ class CRFNew(Layer):
         """ignore_last_label：定义要不要忽略最后一个标签，起到mask的效果
         """
         self.ignore_last_label = 1 if ignore_last_label else 0
-        super(CRF, self).__init__(**kwargs)
+        super(CRFNew, self).__init__(**kwargs)
 
     def build(self, input_shape):
         self.num_labels = input_shape[-1] - self.ignore_last_label
