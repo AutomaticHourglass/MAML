@@ -202,12 +202,12 @@ class CRFNew(Layer):
         要点：1、递归计算；2、用logsumexp避免溢出。
         技巧：通过expand_dims来对齐张量。
         """
-        mask, inputs = inputs[:, :self.num_labels], inputs[:, self.num_labels:]
+        # inputs, mask = inputs[:, :-1], inputs[:, -1:]
         states = K.expand_dims(states[0], 2)  # (batch_size, output_dim, 1)
         trans = K.expand_dims(self.trans, 0)  # (1, output_dim, output_dim)
         outputs = K.logsumexp(states + trans, 1)  # (batch_size, output_dim)
         outputs = outputs + inputs
-        outputs = mask * outputs + (1 - mask) * states[:, :, 0]
+        # outputs = mask * outputs + (1 - mask) * states[:, :, 0]
         return outputs, [outputs]
 
     def path_score(self, inputs, labels):
@@ -227,8 +227,8 @@ class CRFNew(Layer):
         return inputs
 
     def loss(self, y_true, y_pred):  # 目标y_pred需要是one hot形式
-        mask = y_true[:, :self.num_labels]
-        y_true, y_pred = y_true[:, :, self.num_labels:], y_pred[:, :, self.num_labels:]
+        mask = K.ones_like(y_pred)
+        y_true, y_pred = y_true[:, :, :self.num_labels], y_pred[:, :, :self.num_labels]
         path_score = self.path_score(y_pred, y_true)  # 计算分子（对数）
         init_states = [y_pred[:, 0]]  # 初始状态
         y_pred = K.concatenate([y_pred, mask])
@@ -237,7 +237,7 @@ class CRFNew(Layer):
         return log_norm - path_score  # 即log(分子/分母)
 
     def accuracy(self, y_true, y_pred):  # 训练过程中显示逐帧准确率的函数，排除了mask的影响
-        mask = y_true[:, :self.num_labels]
+        mask = None
         y_true, y_pred = y_true[:, :, :self.num_labels], y_pred[:, :, :self.num_labels]
         isequal = K.equal(K.argmax(y_true, 2), K.argmax(y_pred, 2))
         isequal = K.cast(isequal, 'float32')
