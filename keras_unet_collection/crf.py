@@ -185,14 +185,13 @@ class CRFNew(Layer):
     CRF层本质上是一个带训练参数的loss计算层，因此CRF层只用来训练模型，
     而预测则需要另外建立模型。
     """
-    def __init__(self, ignore_last_label=False, **kwargs):
+    def __init__(self, **kwargs):
         """ignore_last_label：定义要不要忽略最后一个标签，起到mask的效果
         """
-        self.ignore_last_label = 1 if ignore_last_label else 0
         super(CRFNew, self).__init__(**kwargs)
 
     def build(self, input_shape):
-        self.num_labels = input_shape[-1] - self.ignore_last_label
+        self.num_labels = input_shape[-1]
         self.trans = self.add_weight(name='crf_trans',
                                      shape=(self.num_labels, self.num_labels),
                                      initializer='uniform',
@@ -203,7 +202,7 @@ class CRFNew(Layer):
         要点：1、递归计算；2、用logsumexp避免溢出。
         技巧：通过expand_dims来对齐张量。
         """
-        inputs, mask = inputs[:, :-1], inputs[:, -1:]
+        inputs, mask = inputs[:, :self.num_labels], inputs[:, :self.num_labels:]
         states = K.expand_dims(states[0], 2)  # (batch_size, output_dim, 1)
         trans = K.expand_dims(self.trans, 0)  # (1, output_dim, output_dim)
         outputs = K.logsumexp(states + trans, 1)  # (batch_size, output_dim)
