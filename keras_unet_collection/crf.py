@@ -185,7 +185,8 @@ class CRFNew(Layer):
     CRF层本质上是一个带训练参数的loss计算层，因此CRF层只用来训练模型，
     而预测则需要另外建立模型。
     """
-    def __init__(self, **kwargs):
+    def __init__(self, mask, **kwargs):
+        self.mask = mask
         """ignore_last_label：定义要不要忽略最后一个标签，起到mask的效果
         """
         super(CRFNew, self).__init__(**kwargs)
@@ -207,7 +208,7 @@ class CRFNew(Layer):
         trans = K.expand_dims(self.trans, 0)  # (1, output_dim, output_dim)
         outputs = K.logsumexp(states + trans, 1)  # (batch_size, output_dim)
         outputs = outputs + inputs
-        # outputs = mask * outputs + (1 - mask) * states[:, :, 0]
+        outputs = self.mask * outputs + (1 - self.mask) * states[:, :, 0]
         return outputs, [outputs]
 
     def path_score(self, inputs, labels):
@@ -227,21 +228,19 @@ class CRFNew(Layer):
         return inputs
 
     def loss(self, y_true, y_pred):  # 目标y_pred需要是one hot形式
-        mask = K.ones_like(y_pred)
         # y_true, y_pred = y_true[:, :, :self.num_labels], y_pred[:, :, :self.num_labels]
         path_score = self.path_score(y_pred, y_true)  # 计算分子（对数）
         init_states = y_pred  # 初始状态
-        y_pred = K.concatenate([y_pred, mask])
+        y_pred = K.concatenate([y_pred, self.mask])
         log_norm, _, _ = K.rnn(self.log_norm_step, y_pred, init_states)  # 计算Z向量（对数）
         log_norm = K.logsumexp(log_norm, 1, keepdims=True)  # 计算Z（对数）
         return log_norm - path_score  # 即log(分子/分母)
 
     def accuracy(self, y_true, y_pred):  # 训练过程中显示逐帧准确率的函数，排除了mask的影响
-        mask = None
         # y_true, y_pred = y_true[:, :, :self.num_labels], y_pred[:, :, :self.num_labels]
         isequal = K.equal(K.argmax(y_true, 2), K.argmax(y_pred, 2))
         isequal = K.cast(isequal, 'float32')
-        if mask == None:
+        if self.mask == None:
             return K.mean(isequal)
         else:
-            return K.sum(isequal * mask) / K.sum(mask)
+            return K.sum(isequal * self.mask) / K.sum(self.mask)
