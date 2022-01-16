@@ -192,7 +192,7 @@ class CRFNew(Layer):
         super(CRFNew, self).__init__(**kwargs)
 
     def build(self, input_shape):
-        self.num_labels = input_shape[-1]
+        self.num_labels = 5
         self.trans = self.add_weight(name='crf_trans',
                                      shape=(self.num_labels, self.num_labels),
                                      initializer='uniform',
@@ -217,9 +217,9 @@ class CRFNew(Layer):
         技巧：用“预测”点乘“目标”的方法抽取出目标路径的得分。
         """
         point_score = K.sum(K.sum(inputs * labels, 2), 1, keepdims=True)  # 逐标签得分
-        labels1 = K.expand_dims(labels[:, :-1], 3)
-        labels2 = K.expand_dims(labels[:, 1:], 2)
-        labels = labels1 * labels2  # 两个错位labels，负责从转移矩阵中抽取目标转移得分
+        # labels1 = K.expand_dims(labels[:, :-1], 3)
+        # labels2 = K.expand_dims(labels[:, 1:], 2)
+        # labels = labels1 * labels2  # 两个错位labels，负责从转移矩阵中抽取目标转移得分
         trans = K.expand_dims(K.expand_dims(self.trans, 0), 0)
         trans_score = K.sum(K.sum(trans * labels, [2, 3]), 1, keepdims=True)
         return point_score + trans_score  # 两部分得分之和
