@@ -230,9 +230,9 @@ class CRFNew(Layer):
         mask = K.ones_like(y_pred)
         # y_true, y_pred = y_true[:, :, :self.num_labels], y_pred[:, :, :self.num_labels]
         path_score = self.path_score(y_pred, y_true)  # 计算分子（对数）
-        init_states = [y_pred[:, 0]]  # 初始状态
+        init_states = y_pred  # 初始状态
         y_pred = K.concatenate([y_pred, mask])
-        log_norm, _, _ = K.rnn(self.log_norm_step, y_pred[:, 1:], init_states)  # 计算Z向量（对数）
+        log_norm, _, _ = K.rnn(self.log_norm_step, y_pred, init_states)  # 计算Z向量（对数）
         log_norm = K.logsumexp(log_norm, 1, keepdims=True)  # 计算Z（对数）
         return log_norm - path_score  # 即log(分子/分母)
 
