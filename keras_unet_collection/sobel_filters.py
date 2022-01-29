@@ -7,7 +7,7 @@ from tensorflow.keras.utils import to_categorical
 import keras.backend as K # 引入Keras后端来自定义loss，注意Keras模型内的一切运算
                           # 必须要通过Keras后端完成，比如取对数要用K.log不能用np.log
 # from tensorflow.python.keras.layers import Lambda, Convolution2D;
-
+import tensorflow as tf
 
 def sobel_x_initializer(shape, dtype=None):
     print(shape)    
